@@ -199,7 +199,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .expect(200, done)
       ;
     });
-/*
+
     it('DELETE a submissions file', function (done) {
       agent
         .delete('/galleries/' + gallery + '/images/' + image + '/')
@@ -207,10 +207,5 @@ describe('SlippyNode Image Server REST API Tests', function () {
       ;
     });
 
-    it('DELETE a submission', function (done) {
-      agent.delete('/galleries/' + gallery + '/').expect(200, done);
-    });
-*/
   });
-
 });

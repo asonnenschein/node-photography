@@ -312,28 +312,33 @@ module.exports = function (db) {
     },
 
     deleteGalleriesImage: function (req, res, next) {
-      new db.GalleriesImages({ name: req.params.file })
-        .fetch({ withRelated: ['submission'] })
-        .then(function (file) {
-          var submission = file.related('submission');
-          if (!file) {
-            return res.status(400).send("File does not exist!");
-          }
-          else if (file.get('users_id') !== req.user.id) {
-            return res.status(400).send("User not authorized");
-          }
-          else if (submission.get('name') !== req.params.submission) {
-            return res.status(500).send("Internal server error!");
-          }
-          else {
-            file.destroy()
-              .then(function (success) {
-                return res.status(200).end();
+      new db.Galleries({ url_path: req.params.gallery }).fetch()
+        .then(function (gallery) {
+          if (gallery && gallery.get('users_id') === req.user.id) {
+
+            var query = {galleries_id: gallery.id, url_path: req.params.image};
+
+            new db.GalleriesImages(query).fetch()
+              .then(function (image) {
+                if (!image) {
+                  return res.status(400).send("File does not exist!");
+                }
+                else {
+                  image.destroy()
+                    .then(function (success) {
+                      return res.status(200).end();
+                    })
+                    .catch(function (error) {
+                      return res.status(400).send("Could not delete file!");
+                    })
+                  ;
+                }
               })
               .catch(function (error) {
                 return res.status(400).send("Could not delete file!");
               })
             ;
+
           }
         })
         .catch(function (error) {
