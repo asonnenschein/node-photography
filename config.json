@@ -1,0 +1,14 @@
+{
+  "uploads": "./uploads/",
+  "allowed_extensions": ["jpg", "png", "gif", "webm"],
+  "db": {
+    "client": "postgres",
+    "connection": {
+      "host": "127.0.0.1",
+      "user": "photojoe_user",
+      "password": "password",
+      "database": "photojoe_db",
+      "charset": "utf8"
+    }
+  }
+}
