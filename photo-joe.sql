@@ -12,6 +12,7 @@ CREATE TABLE galleries (
     galleries_id SERIAL PRIMARY KEY,
     users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
     name UUID DEFAULT uuid_generate_v4() NOT NULL,
+    url_path VARCHAR,
     title VARCHAR,
     description VARCHAR,
     created_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,6 +27,7 @@ CREATE TABLE galleries_images (
     directory VARCHAR,
     original_name VARCHAR,
     name VARCHAR,
+    url_path VARCHAR,
     caption VARCHAR (5000),
     cover_image BOOLEAN DEFAULT FALSE,
     order_number INTEGER,

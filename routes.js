@@ -78,40 +78,60 @@ module.exports = function (db) {
       new db.Users({ users_id: req.user.id }).fetch()
         .then(function (users) {
 
-          var galleriesData = {
-            "users_id": users.id,
-            "title": req.body.title,
-            "description": req.body.description
-          };
+          var urlPath = req.body.title.replace(/ /g,'').toLowerCase();
 
-          new db.Galleries(galleriesData).save()
-            .then(function (gallery) {
+          new db.Galleries({ url_path: urlPath }).fetch()
+            .then(function (exists) {
+              if (exists) return res.status(409).send("Gallery exists!");
 
-              var imagesData = {
-                "galleries_id": gallery.id,
+              var galleriesData = {
                 "users_id": users.id,
-                "size": req.files.file.size,
-                "directory": req.files.file.path,
-                "original_name": req.files.file.originalname,
-                "name": req.files.file.name,
-                "caption": req.body.caption,
-                "upload_ip": req.ip,
-                "order_number": req.body.order_number,
-                "cover_image": req.body.cover_image
+                "title": req.body.title,
+                "url_path": urlPath,
+                "description": req.body.description
               };
 
-              new db.GalleriesImages(imagesData).save()
-                .then(function (image) {
-                  return res.status(200).end();
+              new db.Galleries(galleriesData).save()
+                .then(function (gallery) {
+
+                  var imgUrlPath, imagesData;
+
+                  imgUrlPath = req.files.file.originalname
+                    .replace(/ /g,'').toLowerCase();
+
+                  imagesData = {
+                    "galleries_id": gallery.id,
+                    "users_id": users.id,
+                    "size": req.files.file.size,
+                    "directory": req.files.file.path,
+                    "original_name": req.files.file.originalname,
+                    "url_path": imgUrlPath,
+                    "name": req.files.file.name,
+                    "caption": req.body.caption,
+                    "upload_ip": req.ip,
+                    "order_number": req.body.order_number,
+                    "cover_image": req.body.cover_image
+                  };
+
+                  new db.GalleriesImages(imagesData).save()
+                    .then(function (image) {
+                      image = image.toJSON();
+                      image["gallery_path"] = gallery.get("url_path");
+                      return res.status(200).send(image);
+                    })
+                    .catch(function (error) {
+                      res.status(404).send("Could not upload image!");
+                    })
+                  ;
+
                 })
                 .catch(function (error) {
-                  res.status(404).send("Could not upload image!");
+                  return res.status(404).send("Could not create gallery!");
                 })
               ;
 
             })
             .catch(function (error) {
-              console.log(error);
               return res.status(404).send("Could not create gallery!");
             })
           ;
@@ -179,7 +199,7 @@ module.exports = function (db) {
     // Galleries Images Routes =================================================
 
     getGalleriesImages: function (req, res, next) {
-      new db.SubmissionsFiles({ name: req.params.file })
+      new db.GalleriesImages({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
           var submission = file.related('submission');
@@ -194,13 +214,16 @@ module.exports = function (db) {
     },
 
     getGalleriesImage: function (req, res, next) {
-      new db.SubmissionsFiles({ name: req.params.submission })
-        .fetchAll({ withRelated: ['submission'] })
+      new db.Galleries({ url_path: req.params.gallery })
+        .fetchAll({ withRelated: ['galleriesImages'] })
         .then(function (files) {
-          var submission = files.models[0].related('submission');
-          if (submission.get('name') === req.params.submission) {
-            return res.status(200).send(files.toJSON());
-          }
+          var image = files.models[0].toJSON();
+          _.each(image.galleriesImages, function(image) {
+            if (image.url_path === req.params.image) {
+              image["gallery_path"] = image.url_path;
+              return res.status(200).send(image);
+            }
+          });
         })
         .catch(function (error) {
           return res.status(404).send("Could not get file!");
@@ -209,7 +232,7 @@ module.exports = function (db) {
     },
 
     createGalleriesImage: function (req, res, next) {
-      new db.Submissions({ name: req.params.submission }).fetch()
+      new db.Galleries({ name: req.params.submission }).fetch()
         .then(function (submissions) {
           if (submissions.get('users_id') === req.user.id) {
 
@@ -244,7 +267,7 @@ module.exports = function (db) {
     },
 
     updateGalleriesImage: function (req, res, next) {
-      new db.SubmissionsFiles({ name: req.params.file })
+      new db.GalleriesImages({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
           var submission = file.related('submission');
@@ -275,7 +298,7 @@ module.exports = function (db) {
     },
 
     deleteGalleriesImage: function (req, res, next) {
-      new db.SubmissionsFiles({ name: req.params.file })
+      new db.GalleriesImages({ name: req.params.file })
         .fetch({ withRelated: ['submission'] })
         .then(function (file) {
           var submission = file.related('submission');

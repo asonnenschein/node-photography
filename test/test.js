@@ -90,6 +90,9 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .post('/galleries/')
         .field('title', 'This is a title')
         .field('description', 'This is a picture of a cute dog.')
+        .field('caption', 'This is a caption')
+        .field('order_number', '1')
+        .field('cover_image', 'true')
         .attach('file', './test/cutedog.jpg')
         .expect(200, done)
       ;
@@ -145,12 +148,15 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .post('/galleries/')
         .field('title', 'This is a title')
         .field('description', 'This is a picture of a cute dog.')
+        .field('caption', 'This is a caption')
+        .field('order_number', '1')
+        .field('cover_image', 'true')
         .attach('file', './test/cutedog.jpg')
         .end(function (error, response) {
           if (error) throw error;
           if (response.status === 200) {
-            image = response.body.name;
-            gallery = response.body.gallery;
+            image = response.body.url_path;
+            gallery = response.body.gallery_path;
             done();
           }
         })
@@ -159,7 +165,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
 
     it('GET a single galleries image', function (done) {
       agent
-        .get('/galleries/' + gallery + '/' + image)
+        .get('/galleries/' + gallery + '/images/' + image + '/')
         .expect(200, done)
       ;
     });
