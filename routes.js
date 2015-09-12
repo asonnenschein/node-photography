@@ -232,29 +232,37 @@ module.exports = function (db) {
     },
 
     createGalleriesImage: function (req, res, next) {
-      new db.Galleries({ name: req.params.submission }).fetch()
-        .then(function (submissions) {
-          if (submissions.get('users_id') === req.user.id) {
+      new db.Galleries({ url_path: req.params.gallery }).fetch()
+        .then(function (gallery) {
+          if (gallery && gallery.get('users_id') === req.user.id) {
 
-            var submissionsFileData = {
-              "submissions_id": submissions.id,
-              "users_id": submissions.get('users_id'),
+            var imgUrlPath, imagesData;
+
+            imgUrlPath = req.files.file.originalname
+              .replace(/ /g,'').toLowerCase();
+
+            imagesData = {
+              "galleries_id": gallery.id,
+              "users_id": req.user.id,
               "size": req.files.file.size,
               "directory": req.files.file.path,
               "original_name": req.files.file.originalname,
+              "url_path": imgUrlPath,
               "name": req.files.file.name,
               "caption": req.body.caption,
-              "upload_ip": req.ip
+              "upload_ip": req.ip,
+              "order_number": req.body.order_number,
+              "cover_image": req.body.cover_image
             };
 
-            new db.SubmissionsFiles(submissionsFileData).save()
-              .then(function (file) {
-                file = file.toJSON();
-                file.submission = submissions.get('name');
-                return res.status(200).send(file);
+            new db.GalleriesImages(imagesData).save()
+              .then(function (image) {
+                image = image.toJSON();
+                image["gallery_path"] = gallery.get("url_path");
+                return res.status(200).send(image);
               })
               .catch(function (error) {
-                return res.status(404).send("Could not upload file!");
+                res.status(404).send("Could not upload image!");
               })
             ;
 
@@ -267,28 +275,34 @@ module.exports = function (db) {
     },
 
     updateGalleriesImage: function (req, res, next) {
-      new db.GalleriesImages({ name: req.params.file })
-        .fetch({ withRelated: ['submission'] })
-        .then(function (file) {
-          var submission = file.related('submission');
-          if (!file) {
-            return res.status(400).send("File does not exist!");
-          }
-          else if (file.get('users_id') !== req.user.id) {
-            return res.status(400).send("User not authorized");
-          }
-          else if (submission.get('name') !== req.params.submission) {
-            return res.status(500).send("Internal server error!");
-          }
-          else {
-            file.save(req.body, { method: 'update' })
-              .then(function (update) {
-                return res.status(200).send(update);
-              })
-              .catch(function (error) {
-                return res.status(400).send("Could not update submission!");
-              })
-            ;
+      new db.Galleries({ url_path: req.params.gallery }).fetch()
+        .then(function (gallery) {
+          if (gallery && gallery.get('users_id') === req.user.id) {
+
+            new db.GalleriesImages({
+              galleries_id: gallery.id,
+              url_path: req.params.image
+            })
+            .fetch()
+            .then(function (image) {
+              if (!image) {
+                return res.status(400).send("File does not exist!");
+              }
+              else {
+                image.save(req.body, { method: 'update' })
+                  .then(function (update) {
+                    return res.status(200).send(update);
+                  })
+                  .catch(function (error) {
+                    return res.status(400).send("Could not update image!");
+                  })
+                ;
+              }
+            })
+            .catch(function (error) {
+              return res.status(500).send("Internal server error!");
+            });
+
           }
         })
         .catch(function (error) {

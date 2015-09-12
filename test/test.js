@@ -169,20 +169,21 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .expect(200, done)
       ;
     });
-/*
+
     it('POST upload a new galleries image', function (done) {
       agent
         .post('/galleries/' + gallery + '/images/')
-        .field('title', 'This is a title')
-        .field('caption', 'This is a picture of a cute dog.')
-        .field('private', 'false')
-        .field('anonymous', 'false')
+        .field('title', 'This is another title')
+        .field('description', 'This is a picture of a cute dog.')
+        .field('caption', 'This is a caption')
+        .field('order_number', '2')
+        .field('cover_image', 'true')
         .attach('file', './test/cutedog.jpg')
         .end(function (error, response) {
           if (error) throw error;
           if (response.status === 200) {
-            image = response.body.name;
-            gallery = response.body.gallery;
+            image = response.body.url_path;
+            gallery = response.body.gallery_path;
             done();
           }
         })
@@ -191,15 +192,14 @@ describe('SlippyNode Image Server REST API Tests', function () {
 
     it('PUT update a gallery', function (done) {
       agent
-        .put('/galleries/' + submission + '/images/' + image + '/')
-        .field('title', 'This is an updated title')
-        .field('caption', 'This is an updated picture of a cute dog.')
-        .field('private', 'false')
-        .field('anonymous', 'false')
+        .put('/galleries/' + gallery + '/images/' + image + '/')
+        .field('caption', 'This is an updated caption')
+        .field('order_number', '2')
+        .field('cover_image', 'true')
         .expect(200, done)
       ;
     });
-
+/*
     it('DELETE a submissions file', function (done) {
       agent
         .delete('/galleries/' + gallery + '/images/' + image + '/')
