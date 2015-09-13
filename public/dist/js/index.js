@@ -105,21 +105,8 @@ var App = React.createClass({displayName: "App",
       default:
         Child = NavList;
     }
-/*
-      case '':
-        Child = Home;
-        break;
-      case 'home':
-        Child = Home;
-        break;
-      case 'about':
-        Child = About;
-        break;
-      default:
-        Child = Home;
-    }
-*/
-    if (this.props.route === 'login' | 'register') {
+
+    if (this.props.route !== '' | this.props.route !== 'galleries') {
       return (
         React.createElement("div", null, 
           React.createElement(Child, null)

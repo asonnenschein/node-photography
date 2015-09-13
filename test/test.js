@@ -95,6 +95,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .field('caption', 'This is a caption')
         .field('order_number', '1')
         .field('cover_image', 'true')
+        .field('img_title', 'This is an image title')
         .attach('file', './test/cutedog.jpg')
         .expect(200, done)
       ;
@@ -153,6 +154,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .field('caption', 'This is a caption')
         .field('order_number', '1')
         .field('cover_image', 'true')
+        .field('img_title', 'This is an image title')
         .attach('file', './test/cutedog.jpg')
         .end(function (error, response) {
           if (error) throw error;
@@ -180,6 +182,7 @@ describe('SlippyNode Image Server REST API Tests', function () {
         .field('caption', 'This is a caption')
         .field('order_number', '2')
         .field('cover_image', 'true')
+        .field('img_title', 'This is an image title')
         .attach('file', './test/cutedog.jpg')
         .end(function (error, response) {
           if (error) throw error;

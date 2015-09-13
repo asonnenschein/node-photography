@@ -27,6 +27,7 @@ CREATE TABLE galleries_images (
     directory VARCHAR,
     original_name VARCHAR,
     name VARCHAR,
+    img_title VARCHAR,
     url_path VARCHAR,
     caption VARCHAR (5000),
     cover_image BOOLEAN DEFAULT FALSE,

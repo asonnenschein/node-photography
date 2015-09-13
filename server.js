@@ -39,6 +39,7 @@ function checkAuthorization (req, res, next) {
 server.post('/admin/login/',
   passport.authenticate('login'),
   function (req, res, next) {
+//    res.status(200).end();
     var username = req.user.get('username');
     res.redirect('/users/' + username + '/');
   })
@@ -55,6 +56,7 @@ server.post('/admin/logout/',
 server.post('/admin/register/',
   passport.authenticate('register'),
   function (req, res, next) {
+//    res.status(201).end();
     var username = req.user.get('username');
     res.redirect('/users/' + username + '/');
   })
@@ -98,7 +100,6 @@ server.post('/galleries/',
     }
   }),
   function (req, res, next) {
-    console.log(req.body);
     return next();
   }, routes.createGallery)
 ;
