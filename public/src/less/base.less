@@ -279,3 +279,33 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         width: 100%;
     }
 }
+
+label.input-file-label input[type="file"] {
+    position: fixed;
+    top: -1000px;
+}
+
+.input-file-label {
+    border: 2px solid #AAA;
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin: 2px;
+    background: #DDD;
+    display: inline-block;
+}
+
+.input-file-label:hover {
+    background: #CCC;
+}
+
+.input-file-label:active {
+    background: #CCF;
+}
+
+.input-file-label:invalid + span {
+    color: #A44;
+}
+
+.input-file-label:valid + span {
+    color: #4A4;
+}

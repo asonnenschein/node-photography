@@ -80,7 +80,14 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
                 React.createElement("label", {htmlFor: "caption"}, "Image Caption"), 
                 React.createElement("textarea", {name: "caption", type: "text", 
                   placeholder: "Image Caption"}
-                )
+                ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
+                React.createElement("input", {name: "img_title", type: "text", 
+                  placeholder: "Image Title"})
+              ), 
+
+                React.createElement("input", {type: "file", name: "file", accept: "image/*"})
               ), 
 
               React.createElement("button", {type: "submit", className: "pure-button pure-button-primary"}, 

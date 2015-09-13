@@ -81,6 +81,13 @@ var CreateGallery = React.createClass({
                 <textarea name="caption" type="text"
                   placeholder="Image Caption">
                 </textarea>
+              <div className="pure-control-group">
+                <label htmlFor="img_title">Image Title</label>
+                <input name="img_title" type="text"
+                  placeholder="Image Title" />
+              </div>
+
+                <input type="file" name="file" accept="image/*" />
               </div>
 
               <button type="submit" className="pure-button pure-button-primary">
