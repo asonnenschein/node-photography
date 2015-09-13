@@ -1,4 +1,4 @@
-var NavBarLink = React.createClass({displayName: "NavBarLink",
+var NavListLink = React.createClass({displayName: "NavListLink",
   render: function () {
     return (
       React.createElement("a", {href: this.props.url, className: "pure-menu-link"}, this.props.text)
@@ -6,9 +6,9 @@ var NavBarLink = React.createClass({displayName: "NavBarLink",
   }
 });
 
-var NavBarItem = React.createClass({displayName: "NavBarItem",
+var NavListItem = React.createClass({displayName: "NavListItem",
   generateLink: function () {
-    return React.createElement(NavBarLink, {url: this.props.url, text: this.props.text});
+    return React.createElement(NavListLink, {url: this.props.url, text: this.props.text});
   },
   render: function () {
     var content = this.generateLink();
@@ -16,52 +16,47 @@ var NavBarItem = React.createClass({displayName: "NavBarItem",
   }
 });
 
-var NavBar = React.createClass({displayName: "NavBar",
+var NavList = React.createClass({displayName: "NavList",
   getInitialState: function () {
     return {};
   },
-  toggleHorizontal: function () {
-    [].forEach.call(
-      React.findDOMNode(this.refs.headerNav)
-        .querySelectorAll('.custom-can-transform'),
-      function (element) {
-        element.classList.toggle('pure-menu-horizontal');
+  toggleClass: function (element, className) {
+    var classes = element.className.split(/\s+/)
+      , length = classes.length
+      , i = 0
+    ;
+
+    for (i; i < length; i++) {
+      if (classes[i] === className) {
+        classes.splice(i, 1);
+        break;
       }
-    );
-  },
-  toggleMenu: function () {
-    var element = React.findDOMNode(this.refs.headerNav);
-    if (element.classList.contains('open')) {
-      setTimeout(this.toggleHorizontal, 500);
     }
-    else {
-      this.toggleHorizontal();
+    if (length === classes.length) {
+      classes.push(className);
     }
-    element.classList.toggle('open');
-    React.findDOMNode(this.refs.toggle).classList.toggle('x');
-  },
-  closeMenu: function () {
-    var element = React.findDOMNode(this.refs.headerNav);
-    if (element.classList.contains('open')) {
-      this.toggleMenu();
-    }
+    element.className = classes.join(' ');
   },
   componentDidMount: function() {
     var self = this
-      , toggle = React.findDOMNode(this.refs.toggle)
+      , layout = React.findDOMNode(this.refs.layout)
+      , menu = React.findDOMNode(this.refs.menu)
+      , menuLink = React.findDOMNode(this.refs.menuLink)
     ;
 
-    toggle.addEventListener('click', function (e) {
-      self.toggleMenu();
+    menuLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      self.toggleClass(layout, 'active');
+      self.toggleClass(menu, 'active');
+      self.toggleClass(menuLink, 'active');
     });
 
-    window.addEventListener('resize', this.closeMenu);
   },
   componentWillUnmount: function() {
-    window.removeEventListener('resize', this.closeMenu);
+
   },
   generateItem: function (item) {
-    return React.createElement(NavBarItem, {text: item.text, url: item.url})
+    return React.createElement(NavListItem, {text: item.text, url: item.url})
   },
   render: function () {
     var items = [
@@ -69,26 +64,24 @@ var NavBar = React.createClass({displayName: "NavBar",
       {"text": "Galleries", "url": "/galleries"}
     ].map(this.generateItem);
     return (
-      React.createElement("div", {className: "navigation-wrapper", ref: "headerNav"}, 
-        React.createElement("div", {className: "content-container pure-g"}, 
-          React.createElement("div", {className: "pure-u-1 pure-u-md-1-2"}, 
-            React.createElement("div", {className: "pure-menu"}, 
-              React.createElement("a", {href: "/", className: "pure-menu-heading custom-brand"}, 
-                "Josef Sonnenschein"
-              ), 
-              React.createElement("a", {href: "#", className: "custom-toggle", ref: "toggle"}, 
-                React.createElement("s", {className: "bar"}), 
-                React.createElement("s", {className: "bar"})
-              )
-            )
+      React.createElement("div", {id: "layout", ref: "layout"}, 
+        React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
+          React.createElement("span", null)
+        ), 
+        React.createElement("div", {id: "menu", ref: "menu"}, 
+          React.createElement("div", {className: "pure-menu"}, 
+            React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
           ), 
-          React.createElement("div", {className: "pure-u-1 pure-u-md-1-2"}, 
-            React.createElement("div", {className: "pure-menu pure-menu-horizontal custom-menu-3" + ' ' +
-              "custom-can-transform"}, 
-              React.createElement("ul", {className: "pure-menu-list"}, 
-                items
-              )
-            )
+          React.createElement("ul", {className: "pure-menu-list"}, 
+            items
+          )
+        ), 
+        React.createElement("div", {id: "main", ref: "main"}, 
+          React.createElement("div", {className: "header"}, 
+            React.createElement("h1", null, "Heading")
+          ), 
+          React.createElement("div", {className: "content"}
+
           )
         )
       )
@@ -100,6 +93,19 @@ var App = React.createClass({displayName: "App",
   render: function () {
     var Child;
     switch (this.props.route) {
+      case 'login':
+        Child = AdminLogin;
+        break;
+      case 'register':
+        Child = AdminRegister;
+        break;
+      case 'users':
+        Child = AdminUser;
+        break;
+      default:
+        Child = NavList;
+    }
+/*
       case '':
         Child = Home;
         break;
@@ -112,17 +118,21 @@ var App = React.createClass({displayName: "App",
       default:
         Child = Home;
     }
-
-    return (
-      React.createElement("div", null, 
-          React.createElement("nav", null, 
-            React.createElement(NavBar, null)
-          ), 
-          React.createElement("div", {className: "content-wrapper"}, 
-            React.createElement(Child, null)
-          )
-      )
-    )
+*/
+    if (this.props.route === 'login' | 'register') {
+      return (
+        React.createElement("div", null, 
+          React.createElement(Child, null)
+        )
+      );
+    }
+    else {
+      return (
+        React.createElement("div", null, 
+          React.createElement(NavList, null)
+        )
+      );
+    }
   }
 });
 

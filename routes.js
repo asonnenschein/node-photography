@@ -16,8 +16,7 @@ module.exports = function (db) {
               id: data.get('users_id')
             }
           };
-          return res.status(200).send(JSON.stringify(package));
-//          return res.render('user', JSON.stringify(package));
+          return next();
         })
         .catch(function (error) {
           return res.status(500).send("Internal server error!");

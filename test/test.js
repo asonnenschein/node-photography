@@ -31,12 +31,14 @@ describe('SlippyNode Image Server REST API Tests', function () {
   describe('USER Tests', function () {
 
     it('POST register a new user account', function (done) {
+
       var request = {
         "username": "testuser",
         "email": "testuser@test.com",
         "password": "secret"
       };
       agent.post('/admin/register/').send(request).expect(201, done);
+
     });
 
     it('POST login to an existing user account', function (done) {

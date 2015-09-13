@@ -25,6 +25,7 @@
     "express-session": "1.11.1",
     "knex": "0.8.6",
     "lodash": "3.9.3",
+    "morgan": "1.6.1",
     "multer": "0.1.8",
     "nodemon": "1.3.7",
     "passport": "0.2.2",

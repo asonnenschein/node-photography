@@ -1,4 +1,4 @@
-var NavBarLink = React.createClass({
+var NavListLink = React.createClass({
   render: function () {
     return (
       <a href={this.props.url} className="pure-menu-link">{this.props.text}</a>
@@ -6,9 +6,9 @@ var NavBarLink = React.createClass({
   }
 });
 
-var NavBarItem = React.createClass({
+var NavListItem = React.createClass({
   generateLink: function () {
-    return <NavBarLink url={this.props.url} text={this.props.text} />;
+    return <NavListLink url={this.props.url} text={this.props.text} />;
   },
   render: function () {
     var content = this.generateLink();
@@ -16,52 +16,47 @@ var NavBarItem = React.createClass({
   }
 });
 
-var NavBar = React.createClass({
+var NavList = React.createClass({
   getInitialState: function () {
     return {};
   },
-  toggleHorizontal: function () {
-    [].forEach.call(
-      React.findDOMNode(this.refs.headerNav)
-        .querySelectorAll('.custom-can-transform'),
-      function (element) {
-        element.classList.toggle('pure-menu-horizontal');
+  toggleClass: function (element, className) {
+    var classes = element.className.split(/\s+/)
+      , length = classes.length
+      , i = 0
+    ;
+
+    for (i; i < length; i++) {
+      if (classes[i] === className) {
+        classes.splice(i, 1);
+        break;
       }
-    );
-  },
-  toggleMenu: function () {
-    var element = React.findDOMNode(this.refs.headerNav);
-    if (element.classList.contains('open')) {
-      setTimeout(this.toggleHorizontal, 500);
     }
-    else {
-      this.toggleHorizontal();
+    if (length === classes.length) {
+      classes.push(className);
     }
-    element.classList.toggle('open');
-    React.findDOMNode(this.refs.toggle).classList.toggle('x');
-  },
-  closeMenu: function () {
-    var element = React.findDOMNode(this.refs.headerNav);
-    if (element.classList.contains('open')) {
-      this.toggleMenu();
-    }
+    element.className = classes.join(' ');
   },
   componentDidMount: function() {
     var self = this
-      , toggle = React.findDOMNode(this.refs.toggle)
+      , layout = React.findDOMNode(this.refs.layout)
+      , menu = React.findDOMNode(this.refs.menu)
+      , menuLink = React.findDOMNode(this.refs.menuLink)
     ;
 
-    toggle.addEventListener('click', function (e) {
-      self.toggleMenu();
+    menuLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      self.toggleClass(layout, 'active');
+      self.toggleClass(menu, 'active');
+      self.toggleClass(menuLink, 'active');
     });
 
-    window.addEventListener('resize', this.closeMenu);
   },
   componentWillUnmount: function() {
-    window.removeEventListener('resize', this.closeMenu);
+
   },
   generateItem: function (item) {
-    return <NavBarItem text={item.text} url={item.url} />
+    return <NavListItem text={item.text} url={item.url} />
   },
   render: function () {
     var items = [
@@ -69,26 +64,24 @@ var NavBar = React.createClass({
       {"text": "Galleries", "url": "/galleries"}
     ].map(this.generateItem);
     return (
-      <div className="navigation-wrapper" ref="headerNav">
-        <div className="content-container pure-g">
-          <div className="pure-u-1 pure-u-md-1-2">
-            <div className="pure-menu">
-              <a href="/" className="pure-menu-heading custom-brand">
-                Josef Sonnenschein
-              </a>
-              <a href="#" className="custom-toggle" ref="toggle">
-                <s className="bar"></s>
-                <s className="bar"></s>
-              </a>
-            </div>
+      <div id="layout" ref="layout">
+        <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
+          <span></span>
+        </a>
+        <div id="menu" ref="menu">
+          <div className="pure-menu">
+            <a href="#" className="pure-menu-heading">Galleries</a>
           </div>
-          <div className="pure-u-1 pure-u-md-1-2">
-            <div className="pure-menu pure-menu-horizontal custom-menu-3
-              custom-can-transform">
-              <ul className="pure-menu-list">
-                {items}
-              </ul>
-            </div>
+          <ul className="pure-menu-list">
+            {items}
+          </ul>
+        </div>
+        <div id="main" ref="main">
+          <div className="header">
+            <h1>Heading</h1>
+          </div>
+          <div className="content">
+
           </div>
         </div>
       </div>
@@ -100,6 +93,19 @@ var App = React.createClass({
   render: function () {
     var Child;
     switch (this.props.route) {
+      case 'login':
+        Child = AdminLogin;
+        break;
+      case 'register':
+        Child = AdminRegister;
+        break;
+      case 'users':
+        Child = AdminUser;
+        break;
+      default:
+        Child = NavList;
+    }
+/*
       case '':
         Child = Home;
         break;
@@ -112,17 +118,21 @@ var App = React.createClass({
       default:
         Child = Home;
     }
-
-    return (
-      <div>
-          <nav>
-            <NavBar />
-          </nav>
-          <div className="content-wrapper">
-            <Child />
-          </div>
-      </div>
-    )
+*/
+    if (this.props.route === 'login' | 'register') {
+      return (
+        <div>
+          <Child />
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          <NavList />
+        </div>
+      );
+    }
   }
 });
 
