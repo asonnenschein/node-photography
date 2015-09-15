@@ -55,7 +55,7 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
     return (
       React.createElement("div", {className: "content-container"}, 
         React.createElement("div", {className: "create-gallery-container"}, 
-          React.createElement("form", {method: "post", action: "/galleries/", 
+          React.createElement("form", {method: "post", action: "/galleries/", enctype: "multipart/form-data", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Create New Gallery"), 
@@ -80,17 +80,14 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
                 React.createElement("label", {htmlFor: "caption"}, "Image Caption"), 
                 React.createElement("textarea", {name: "caption", type: "text", 
                   placeholder: "Image Caption"}
-                ), 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
-                React.createElement("input", {name: "img_title", type: "text", 
-                  placeholder: "Image Title"})
+                )
               ), 
 
-                React.createElement("input", {type: "file", name: "file", accept: "image/*"})
-              ), 
+              React.createElement("input", {type: "file", name: "file", 
+                accept: "application/x-zip-compressed,image/*"}), 
 
-              React.createElement("button", {type: "submit", className: "pure-button pure-button-primary"}, 
+              React.createElement("button", {type: "submit", name: "submit", 
+                className: "pure-button pure-button-primary"}, 
                 "Submit"
               )
             )

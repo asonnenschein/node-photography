@@ -92,12 +92,12 @@ module.exports = function (db) {
 
               new db.Galleries(galleriesData).save()
                 .then(function (gallery) {
-
+                  console.log(gallery);
                   var imgUrlPath, imagesData;
-
+                  console.log(req.files)
                   imgUrlPath = req.files.file.originalname
                     .replace(/ /g,'').toLowerCase();
-
+                    console.log(imgUrlPath);
                   imagesData = {
                     "galleries_id": gallery.id,
                     "users_id": users.id,
@@ -117,7 +117,7 @@ module.exports = function (db) {
                     .then(function (image) {
                       image = image.toJSON();
                       image["gallery_path"] = gallery.get("url_path");
-                      return res.status(200).send(image);
+                      return next();
                     })
                     .catch(function (error) {
                       res.status(404).send("Could not upload image!");

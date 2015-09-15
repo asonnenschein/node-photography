@@ -55,7 +55,7 @@ var CreateGallery = React.createClass({
     return (
       <div className="content-container">
         <div className="create-gallery-container">
-          <form method="post" action="/galleries/"
+          <form method="post" action="/galleries/" enctype="multipart/form-data"
             className="pure-form pure-form-aligned">
             <fieldset>
               <legend>Create New Gallery</legend>
@@ -81,16 +81,13 @@ var CreateGallery = React.createClass({
                 <textarea name="caption" type="text"
                   placeholder="Image Caption">
                 </textarea>
-              <div className="pure-control-group">
-                <label htmlFor="img_title">Image Title</label>
-                <input name="img_title" type="text"
-                  placeholder="Image Title" />
               </div>
 
-                <input type="file" name="file" accept="image/*" />
-              </div>
+              <input type="file" name="file"
+                accept="application/x-zip-compressed,image/*"/>
 
-              <button type="submit" className="pure-button pure-button-primary">
+              <button type="submit" name="submit"
+                className="pure-button pure-button-primary">
                 Submit
               </button>
             </fieldset>

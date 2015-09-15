@@ -28,6 +28,8 @@ server.use(session({
 server.use(passport.initialize());
 server.use(passport.session());
 
+server.use(multer({dest: config.uploads}).single('file'));
+
 server.enable('trust proxy');
 
 function checkAuthorization (req, res, next) {
@@ -91,16 +93,25 @@ server.get('/galleries/:gallery/',
 ;
 
 server.post('/galleries/',
+/*
   multer({
     dest: config.uploads,
+    onFileUploadStart: function (file) {
+      console.log(file.originalname + ' is starting ...')
+    },
     onFileUploadStart: function (file, req, res) {
+      console.log(file);
       if (config.allowed_extensions.indexOf(file.extension) < 0) {
         return false;
       }
     }
   }),
+*/
   function (req, res, next) {
+    console.log(req.files);
     return next();
+//    var username = req.user.get('username');
+//    res.redirect('/users/' + username + '/#/manage');
   }, routes.createGallery)
 ;
 
@@ -133,6 +144,7 @@ server.get('/galleries/:gallery/images/:image/',
 
 server.post('/galleries/:gallery/images/',
   checkAuthorization,
+/*
   multer({
     dest: config.uploads,
     onFileUploadStart: function (file, req, res) {
@@ -141,6 +153,7 @@ server.post('/galleries/:gallery/images/',
       }
     }
   }),
+  */
   function (req, res, next) {
     return next();
   }, routes.createGalleriesImage)
