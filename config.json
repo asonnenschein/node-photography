@@ -1,6 +1,7 @@
 {
   "uploads": "./uploads/",
-  "allowed_extensions": ["jpg", "png", "gif", "webm"],
+  "thumbnails": "./thumbnails/",
+  "allowed_extensions": ["jpg", "jpeg", "png", "gif", "webm"],
   "db": {
     "client": "postgres",
     "connection": {

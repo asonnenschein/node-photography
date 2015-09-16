@@ -100,8 +100,7 @@ server.post('/galleries/',
     }
   }),
   function (req, res, next) {
-    var username = req.user.get('username');
-    res.redirect('/users/' + username + '/#/manage');
+    return next();
   }, routes.createGallery)
 ;
 

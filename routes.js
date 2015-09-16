@@ -1,4 +1,8 @@
-var _ = require('lodash');
+var _ = require('lodash')
+  , config = require('./config.json')
+  , gm = require('gm')
+  , path = require('path')
+;
 
 module.exports = function (db) {
 
@@ -74,6 +78,7 @@ module.exports = function (db) {
     },
 
     createGallery: function (req, res, next) {
+      var username = req.user.get('username');
       new db.Users({ users_id: req.user.id }).fetch()
         .then(function (users) {
 
@@ -92,12 +97,11 @@ module.exports = function (db) {
 
               new db.Galleries(galleriesData).save()
                 .then(function (gallery) {
-                  console.log(gallery);
                   var imgUrlPath, imagesData;
-                  console.log(req.files)
+
                   imgUrlPath = req.files.file.originalname
                     .replace(/ /g,'').toLowerCase();
-                    console.log(imgUrlPath);
+
                   imagesData = {
                     "galleries_id": gallery.id,
                     "users_id": users.id,
@@ -109,18 +113,35 @@ module.exports = function (db) {
                     "img_title": req.body.img_title,
                     "caption": req.body.caption,
                     "upload_ip": req.ip,
-                    "order_number": req.body.order_number,
-                    "cover_image": req.body.cover_image
+                    "order_number": 1,
+                    "cover_image": true
                   };
 
                   new db.GalleriesImages(imagesData).save()
                     .then(function (image) {
                       image = image.toJSON();
                       image["gallery_path"] = gallery.get("url_path");
-                      return next();
+
+                      var thumbPath = path.join(config.thumbnails,
+                        image.name);
+
+                      gm(image.directory)
+                        .resize('300', '300', '^')
+                        .gravity('center')
+                        .crop('300', '300')
+                        .write(thumbPath, function (err) {
+                          if (err) {
+                            return res.status(404)
+                              .send("Could not upload image!");
+                          } else {
+                            res.redirect('/users/' + username + '/#/manage');
+                          }
+                        })
+                      ;
                     })
                     .catch(function (error) {
-                      res.status(404).send("Could not upload image!");
+                      console.log(error);
+                      return res.status(404).send("Could not upload image!");
                     })
                   ;
 
