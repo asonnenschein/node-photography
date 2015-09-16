@@ -55,7 +55,7 @@ var CreateGallery = React.createClass({
     return (
       <div className="content-container">
         <div className="create-gallery-container">
-          <form method="post" action="/galleries/" enctype="multipart/form-data"
+          <form method="post" action="/galleries/" encType="multipart/form-data"
             className="pure-form pure-form-aligned">
             <fieldset>
               <legend>Create New Gallery</legend>

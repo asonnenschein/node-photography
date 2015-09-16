@@ -55,7 +55,7 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
     return (
       React.createElement("div", {className: "content-container"}, 
         React.createElement("div", {className: "create-gallery-container"}, 
-          React.createElement("form", {method: "post", action: "/galleries/", enctype: "multipart/form-data", 
+          React.createElement("form", {method: "post", action: "/galleries/", encType: "multipart/form-data", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Create New Gallery"), 
