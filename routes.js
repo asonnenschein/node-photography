@@ -56,7 +56,7 @@ module.exports = function (db) {
     // Galleries Routes ========================================================
 
     getGalleries: function (req, res, next) {
-      new db.Galleries().fetchAll()
+      new db.Galleries().fetchAll({withRelated: 'galleriesImages'})
         .then(function (galleries) {
           return res.status(200).send(galleries);
         })

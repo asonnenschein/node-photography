@@ -98,10 +98,51 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
   }
 });
 
-var ManageGallery = React.createClass({displayName: "ManageGallery",
+var ManageGalleryItem = React.createClass({displayName: "ManageGalleryItem",
   render: function () {
     return (
-      React.createElement("div", null)
+      React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
+        React.createElement("a", {href: this.props.filepath}, 
+          React.createElement("img", {className: "pure-img", src: this.props.thumbpath})
+        )
+      )
+    );
+  }
+});
+
+var ManageGallery = React.createClass({displayName: "ManageGallery",
+  loadImagesFromServer: function () {
+    $.ajax({
+      url: '/galleries/',
+      type: 'GET',
+      success: function (data) {
+        console.log(data);
+        this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
+  },
+  getInitialState: function () {
+    return {data: []};
+  },
+  componentDidMount: function () {
+    this.loadImagesFromServer();
+  },
+  generateManageGalleryItem: function (gallery) {
+    return React.createElement(ManageGalleryItem, {
+      filepath: '/galleries/' + gallery.url_path, 
+      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name})
+  },
+  render: function () {
+    var images = this.state.data.map(this.generateManageGalleryItem);
+    return (
+      React.createElement("div", {className: "content-container pure-g"}, 
+        React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
+          images
+        )
+      )
     );
   }
 });

@@ -98,10 +98,51 @@ var CreateGallery = React.createClass({
   }
 });
 
-var ManageGallery = React.createClass({
+var ManageGalleryItem = React.createClass({
   render: function () {
     return (
-      <div></div>
+      <div className="pure-u-1-3 pure-u-lg-1-5">
+        <a href={this.props.filepath}>
+          <img className="pure-img" src={this.props.thumbpath} />
+        </a>
+      </div>
+    );
+  }
+});
+
+var ManageGallery = React.createClass({
+  loadImagesFromServer: function () {
+    $.ajax({
+      url: '/galleries/',
+      type: 'GET',
+      success: function (data) {
+        console.log(data);
+        this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
+  },
+  getInitialState: function () {
+    return {data: []};
+  },
+  componentDidMount: function () {
+    this.loadImagesFromServer();
+  },
+  generateManageGalleryItem: function (gallery) {
+    return <ManageGalleryItem
+      filepath={'/galleries/' + gallery.url_path}
+      thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name} />
+  },
+  render: function () {
+    var images = this.state.data.map(this.generateManageGalleryItem);
+    return (
+      <div className="content-container pure-g">
+        <div className="pure-u-1-1 pure-u-lg-1-1">
+          {images}
+        </div>
+      </div>
     );
   }
 });
