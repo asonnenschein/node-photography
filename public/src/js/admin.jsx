@@ -98,13 +98,24 @@ var CreateGallery = React.createClass({
   }
 });
 
-var ManageGalleryItem = React.createClass({
+var ManageGalleryThumb = React.createClass({
   render: function () {
     return (
       <div className="pure-u-1-3 pure-u-lg-1-5">
         <a href={this.props.filepath}>
           <img className="pure-img" src={this.props.thumbpath} />
+          <span>{this.props.title}</span>
         </a>
+      </div>
+    );
+  }
+});
+
+var ManageGalleryItems = React.createClass({
+  render: function () {
+    return (
+      <div className="pure-u-1-3 pure-u-lg-1-5">
+        HELLO
       </div>
     );
   }
@@ -128,15 +139,17 @@ var ManageGallery = React.createClass({
     return {data: []};
   },
   componentDidMount: function () {
+    console.log(this.props.gallery);
     this.loadImagesFromServer();
   },
-  generateManageGalleryItem: function (gallery) {
-    return <ManageGalleryItem
-      filepath={'/galleries/' + gallery.url_path}
-      thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name} />
+  generateManageGalleryThumb: function (gallery) {
+    return <ManageGalleryThumb
+      filepath={'#/manage/?gallery=' + gallery.url_path}
+      thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name}
+      title={gallery.title} />
   },
   render: function () {
-    var images = this.state.data.map(this.generateManageGalleryItem);
+    var images = this.state.data.map(this.generateManageGalleryThumb);
     return (
       <div className="content-container pure-g">
         <div className="pure-u-1-1 pure-u-lg-1-1">
@@ -189,9 +202,6 @@ var AdminUser = React.createClass({
     });
 
   },
-  componentWillUnmount: function() {
-
-  },
   generateItem: function (item) {
     return <NavListItem text={item.text} url={item.url} />
   },
@@ -199,6 +209,7 @@ var AdminUser = React.createClass({
     var items
       , route
       , user
+      , gallery
       , AdminChild
     ;
 
@@ -210,6 +221,13 @@ var AdminUser = React.createClass({
 
     route = window.location.hash.split('#/').filter(Boolean)[0];
 
+    if (route && route.indexOf('=') > -1) {
+      gallery = route.split('=').filter(Boolean)[1];
+    }
+    else {
+      gallery = null;
+    }
+
     switch (route) {
       case 'create':
         AdminChild = CreateGallery;
@@ -217,13 +235,16 @@ var AdminUser = React.createClass({
       case 'manage':
         AdminChild = ManageGallery;
         break;
+      case gallery:
+        AdminChild = ManageGalleryItems;
+        break;
       default:
         AdminChild = AdminNull;
     }
 
     user = window.location.pathname.split('/').filter(Boolean)[1];
     user = user.charAt(0).toUpperCase() + user.slice(1)
-
+    console.log('here', gallery);
     return (
       <div id="layout" ref="layout">
         <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
@@ -242,7 +263,7 @@ var AdminUser = React.createClass({
             <h1>Welcome Back, {user}!</h1>
           </div>
           <div className="content">
-            <AdminChild />
+            <AdminChild gallery={gallery} />
           </div>
         </div>
       </div>

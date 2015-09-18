@@ -98,13 +98,24 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
   }
 });
 
-var ManageGalleryItem = React.createClass({displayName: "ManageGalleryItem",
+var ManageGalleryThumb = React.createClass({displayName: "ManageGalleryThumb",
   render: function () {
     return (
       React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
         React.createElement("a", {href: this.props.filepath}, 
-          React.createElement("img", {className: "pure-img", src: this.props.thumbpath})
+          React.createElement("img", {className: "pure-img", src: this.props.thumbpath}), 
+          React.createElement("span", null, this.props.title)
         )
+      )
+    );
+  }
+});
+
+var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
+  render: function () {
+    return (
+      React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
+        "HELLO"
       )
     );
   }
@@ -128,15 +139,17 @@ var ManageGallery = React.createClass({displayName: "ManageGallery",
     return {data: []};
   },
   componentDidMount: function () {
+    console.log(this.props.gallery);
     this.loadImagesFromServer();
   },
-  generateManageGalleryItem: function (gallery) {
-    return React.createElement(ManageGalleryItem, {
-      filepath: '/galleries/' + gallery.url_path, 
-      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name})
+  generateManageGalleryThumb: function (gallery) {
+    return React.createElement(ManageGalleryThumb, {
+      filepath: '#/manage/?gallery=' + gallery.url_path, 
+      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name, 
+      title: gallery.title})
   },
   render: function () {
-    var images = this.state.data.map(this.generateManageGalleryItem);
+    var images = this.state.data.map(this.generateManageGalleryThumb);
     return (
       React.createElement("div", {className: "content-container pure-g"}, 
         React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
@@ -189,9 +202,6 @@ var AdminUser = React.createClass({displayName: "AdminUser",
     });
 
   },
-  componentWillUnmount: function() {
-
-  },
   generateItem: function (item) {
     return React.createElement(NavListItem, {text: item.text, url: item.url})
   },
@@ -199,6 +209,7 @@ var AdminUser = React.createClass({displayName: "AdminUser",
     var items
       , route
       , user
+      , gallery
       , AdminChild
     ;
 
@@ -210,6 +221,13 @@ var AdminUser = React.createClass({displayName: "AdminUser",
 
     route = window.location.hash.split('#/').filter(Boolean)[0];
 
+    if (route && route.indexOf('=') > -1) {
+      gallery = route.split('=').filter(Boolean)[1];
+    }
+    else {
+      gallery = null;
+    }
+
     switch (route) {
       case 'create':
         AdminChild = CreateGallery;
@@ -217,13 +235,16 @@ var AdminUser = React.createClass({displayName: "AdminUser",
       case 'manage':
         AdminChild = ManageGallery;
         break;
+      case gallery:
+        AdminChild = ManageGalleryItems;
+        break;
       default:
         AdminChild = AdminNull;
     }
 
     user = window.location.pathname.split('/').filter(Boolean)[1];
     user = user.charAt(0).toUpperCase() + user.slice(1)
-
+    console.log('here', gallery);
     return (
       React.createElement("div", {id: "layout", ref: "layout"}, 
         React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
@@ -242,7 +263,7 @@ var AdminUser = React.createClass({displayName: "AdminUser",
             React.createElement("h1", null, "Welcome Back, ", user, "!")
           ), 
           React.createElement("div", {className: "content"}, 
-            React.createElement(AdminChild, null)
+            React.createElement(AdminChild, {gallery: gallery})
           )
         )
       )
