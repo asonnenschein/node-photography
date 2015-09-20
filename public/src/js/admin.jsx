@@ -111,20 +111,35 @@ var ManageGalleryThumb = React.createClass({
   }
 });
 
-var ManageGalleryItems = React.createClass({
+var ManageEditGallery = React.createClass({
   render: function () {
+    console.log(this.props.data);
     return (
-      <div className="pure-u-1-3 pure-u-lg-1-5">
-        HELLO
-      </div>
+      <div></div>
     );
   }
 });
 
-var ManageGallery = React.createClass({
+var ManageEditImages = React.createClass({
+  render: function () {
+    return (
+      <div></div>
+    );
+  }
+});
+
+var ManageAddImages = React.createClass({
+  render: function () {
+    return (
+      <div></div>
+    );
+  }
+});
+
+var ManageGalleryItems = React.createClass({
   loadImagesFromServer: function () {
     $.ajax({
-      url: '/galleries/',
+      url: '/galleries/' + this.props.gallery + '/',
       type: 'GET',
       success: function (data) {
         console.log(data);
@@ -139,7 +154,75 @@ var ManageGallery = React.createClass({
     return {data: []};
   },
   componentDidMount: function () {
-    console.log(this.props.gallery);
+    this.loadImagesFromServer();
+  },
+  generateLink: function (item) {
+    return <NavListItem text={item.text} url={item.url} />
+  },
+  render: function () {
+    var EditChild
+      , route
+      , items
+    ;
+
+    route = window.location.hash.split('#/').filter(Boolean)[0];
+    action = route.split('action=').filter(Boolean)[1];
+
+    if (action) {
+      route = route.split('&action').filter(Boolean)[0];
+    }
+
+    items = [
+      {"text": "Edit Gallery", "url": "#/" + route + "&action=editgallery"},
+      {"text": "Edit Images", "url": "#/" + route + "&action=editimages"},
+      {"text": "Add Images", "url": "#/" + route + "&action=addimages"},
+    ].map(this.generateLink);
+
+    switch (action) {
+      case 'editgallery':
+        EditChild = ManageEditGallery;
+        break;
+      case 'editimages':
+        EditChild = ManageEditImages;
+        break;
+      case 'addimages':
+        EditChild = ManageAddImages;
+        break;
+      default:
+        EditChild = ManageEditGallery;
+        break;
+    }
+
+    return (
+      <div className="pure-menu pure-menu-horizontal">
+        <ul className="pure-menu-list">
+          {items}
+        </ul>
+        <div className="content">
+          <EditChild data={this.state.data} />
+        </div>
+      </div>
+    );
+  }
+});
+
+var ManageGallery = React.createClass({
+  loadImagesFromServer: function () {
+    $.ajax({
+      url: '/galleries/',
+      type: 'GET',
+      success: function (data) {
+        this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
+  },
+  getInitialState: function () {
+    return {data: []};
+  },
+  componentDidMount: function () {
     this.loadImagesFromServer();
   },
   generateManageGalleryThumb: function (gallery) {
@@ -223,6 +306,7 @@ var AdminUser = React.createClass({
 
     if (route && route.indexOf('=') > -1) {
       gallery = route.split('=').filter(Boolean)[1];
+      route = 'queryparams';
     }
     else {
       gallery = null;
@@ -235,7 +319,7 @@ var AdminUser = React.createClass({
       case 'manage':
         AdminChild = ManageGallery;
         break;
-      case gallery:
+      case 'queryparams':
         AdminChild = ManageGalleryItems;
         break;
       default:
@@ -244,7 +328,7 @@ var AdminUser = React.createClass({
 
     user = window.location.pathname.split('/').filter(Boolean)[1];
     user = user.charAt(0).toUpperCase() + user.slice(1)
-    console.log('here', gallery);
+
     return (
       <div id="layout" ref="layout">
         <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">

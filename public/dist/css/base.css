@@ -275,3 +275,6 @@ label.input-file-label input[type="file"] {
 .input-file-label:valid + span {
   color: #4A4;
 }
+#main .content .pure-menu.pure-menu-horizontal {
+  text-align: center;
+}

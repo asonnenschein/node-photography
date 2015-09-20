@@ -67,7 +67,8 @@ module.exports = function (db) {
     },
 
     getGallery: function (req, res, next) {
-      new db.Galleries({ name: req.params.gallery }).fetch()
+      new db.Galleries({ url_path: req.params.gallery })
+        .fetch({withRelated: 'galleriesImages'})
         .then(function (gallery) {
           return res.status(200).send(gallery);
         })

@@ -111,20 +111,35 @@ var ManageGalleryThumb = React.createClass({displayName: "ManageGalleryThumb",
   }
 });
 
-var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
+var ManageEditGallery = React.createClass({displayName: "ManageEditGallery",
   render: function () {
+    console.log(this.props.data);
     return (
-      React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
-        "HELLO"
-      )
+      React.createElement("div", null)
     );
   }
 });
 
-var ManageGallery = React.createClass({displayName: "ManageGallery",
+var ManageEditImages = React.createClass({displayName: "ManageEditImages",
+  render: function () {
+    return (
+      React.createElement("div", null)
+    );
+  }
+});
+
+var ManageAddImages = React.createClass({displayName: "ManageAddImages",
+  render: function () {
+    return (
+      React.createElement("div", null)
+    );
+  }
+});
+
+var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
   loadImagesFromServer: function () {
     $.ajax({
-      url: '/galleries/',
+      url: '/galleries/' + this.props.gallery + '/',
       type: 'GET',
       success: function (data) {
         console.log(data);
@@ -139,7 +154,75 @@ var ManageGallery = React.createClass({displayName: "ManageGallery",
     return {data: []};
   },
   componentDidMount: function () {
-    console.log(this.props.gallery);
+    this.loadImagesFromServer();
+  },
+  generateLink: function (item) {
+    return React.createElement(NavListItem, {text: item.text, url: item.url})
+  },
+  render: function () {
+    var EditChild
+      , route
+      , items
+    ;
+
+    route = window.location.hash.split('#/').filter(Boolean)[0];
+    action = route.split('action=').filter(Boolean)[1];
+
+    if (action) {
+      route = route.split('&action').filter(Boolean)[0];
+    }
+
+    items = [
+      {"text": "Edit Gallery", "url": "#/" + route + "&action=editgallery"},
+      {"text": "Edit Images", "url": "#/" + route + "&action=editimages"},
+      {"text": "Add Images", "url": "#/" + route + "&action=addimages"},
+    ].map(this.generateLink);
+
+    switch (action) {
+      case 'editgallery':
+        EditChild = ManageEditGallery;
+        break;
+      case 'editimages':
+        EditChild = ManageEditImages;
+        break;
+      case 'addimages':
+        EditChild = ManageAddImages;
+        break;
+      default:
+        EditChild = ManageEditGallery;
+        break;
+    }
+
+    return (
+      React.createElement("div", {className: "pure-menu pure-menu-horizontal"}, 
+        React.createElement("ul", {className: "pure-menu-list"}, 
+          items
+        ), 
+        React.createElement("div", {className: "content"}, 
+          React.createElement(EditChild, {data: this.state.data})
+        )
+      )
+    );
+  }
+});
+
+var ManageGallery = React.createClass({displayName: "ManageGallery",
+  loadImagesFromServer: function () {
+    $.ajax({
+      url: '/galleries/',
+      type: 'GET',
+      success: function (data) {
+        this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
+  },
+  getInitialState: function () {
+    return {data: []};
+  },
+  componentDidMount: function () {
     this.loadImagesFromServer();
   },
   generateManageGalleryThumb: function (gallery) {
@@ -223,6 +306,7 @@ var AdminUser = React.createClass({displayName: "AdminUser",
 
     if (route && route.indexOf('=') > -1) {
       gallery = route.split('=').filter(Boolean)[1];
+      route = 'queryparams';
     }
     else {
       gallery = null;
@@ -235,7 +319,7 @@ var AdminUser = React.createClass({displayName: "AdminUser",
       case 'manage':
         AdminChild = ManageGallery;
         break;
-      case gallery:
+      case 'queryparams':
         AdminChild = ManageGalleryItems;
         break;
       default:
@@ -244,7 +328,7 @@ var AdminUser = React.createClass({displayName: "AdminUser",
 
     user = window.location.pathname.split('/').filter(Boolean)[1];
     user = user.charAt(0).toUpperCase() + user.slice(1)
-    console.log('here', gallery);
+
     return (
       React.createElement("div", {id: "layout", ref: "layout"}, 
         React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
