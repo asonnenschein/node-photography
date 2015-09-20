@@ -113,17 +113,58 @@ var ManageGalleryThumb = React.createClass({
 
 var ManageEditGallery = React.createClass({
   render: function () {
-    console.log(this.props.data);
+
+    var editPath = "/galleries/" + this.props.data.url_path + "/";
+
     return (
-      <div></div>
+      <div className="content-container">
+        <div className="create-gallery-container">
+          <form method="post" action={editPath}
+            encType="multipart/form-data"
+            className="pure-form pure-form-aligned">
+            <fieldset>
+              <legend>Edit Existing Gallery</legend>
+              <div className="pure-control-group">
+                <label htmlFor="title">Edit Gallery Title</label>
+                <input name="title" type="text"
+                  value={this.props.data.title} />
+              </div>
+              <div className="pure-control-group">
+                <label htmlFor="description">Edit Short Description</label>
+                <textarea name="description" type="text"
+                  value={this.props.data.description}>
+                </textarea>
+              </div>
+              <input type="hidden" name="_method" value="PUT" />
+              <button type="submit" name="submit"
+                className="pure-button pure-button-primary">
+                Submit
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
     );
   }
 });
 
 var ManageEditImages = React.createClass({
+  generateEditImageThumbs: function (gallery) {
+    return <ManageGalleryThumb
+      thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name}
+      title={gallery.title}
+      caption={}/>
+  },
   render: function () {
+    var images = this.props.data.galleriesImages
+      .map(this.generateEditImageThumbs);
+
     return (
-      <div></div>
+      <div className="content-container pure-g">
+        <div className="pure-u-1-1 pure-u-lg-1-1">
+          {images}
+        </div>
+      </div>
     );
   }
 });

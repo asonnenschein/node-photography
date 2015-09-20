@@ -113,9 +113,37 @@ var ManageGalleryThumb = React.createClass({displayName: "ManageGalleryThumb",
 
 var ManageEditGallery = React.createClass({displayName: "ManageEditGallery",
   render: function () {
-    console.log(this.props.data);
+
+    var editPath = "/galleries/" + this.props.data.url_path + "/";
+
     return (
-      React.createElement("div", null)
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "create-gallery-container"}, 
+          React.createElement("form", {method: "post", action: editPath, 
+            encType: "multipart/form-data", 
+            className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("legend", null, "Edit Existing Gallery"), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
+                React.createElement("input", {name: "title", type: "text", 
+                  value: this.props.data.title})
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
+                React.createElement("textarea", {name: "description", type: "text", 
+                  value: this.props.data.description}
+                )
+              ), 
+              React.createElement("input", {type: "hidden", name: "_method", value: "PUT"}), 
+              React.createElement("button", {type: "submit", name: "submit", 
+                className: "pure-button pure-button-primary"}, 
+                "Submit"
+              )
+            )
+          )
+        )
+      )
     );
   }
 });
