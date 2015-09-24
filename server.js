@@ -108,6 +108,14 @@ server.post('/galleries/:gallery/',
   checkAuthorization,
   function (req, res, next) {
     return next();
+  }, routes.HTMLFormPutDeleteGallery)
+;
+
+/*
+server.post('/galleries/:gallery/',
+  checkAuthorization,
+  function (req, res, next) {
+    return next();
   }, routes.updateGallery)
 ;
 
@@ -117,6 +125,7 @@ server.delete('/galleries/:gallery/',
     return next();
   }, routes.deleteGallery)
 ;
+*/
 
 // Galleries Images Routes =====================================================
 server.get('/galleries/:gallery/images/',

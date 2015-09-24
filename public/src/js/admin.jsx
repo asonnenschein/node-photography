@@ -166,6 +166,29 @@ var ManageEditImages = React.createClass({
   }
 });
 
+var ManageDeleteGallery = React.createClass({
+  render: function () {
+    var editPath = "/galleries/" + this.props.data.url_path + "/";
+    return (
+      <div className="content-container">
+        <div className="delete-gallery-container">
+          <form method="post" action={editPath}
+            className="pure-form pure-form-aligned">
+            <fieldset>
+              <input type="hidden" name="_method" value="DELETE" />
+              <legend>Delete Gallery</legend>
+              <button type="submit"
+                className="button-error pure-button">
+                Delete
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    );
+  }
+});
+
 var ManageAddImages = React.createClass({
   render: function () {
     return (
@@ -212,6 +235,7 @@ var ManageGalleryItems = React.createClass({
 
     items = [
       {"text": "Edit Gallery", "url": "#/" + route + "&action=editgallery"},
+      {"text": "Delete Gallery", "url": "#/" + route + "&action=deletegallery"},
       {"text": "Edit Images", "url": "#/" + route + "&action=editimages"},
       {"text": "Add Images", "url": "#/" + route + "&action=addimages"},
     ].map(this.generateLink);
@@ -219,6 +243,9 @@ var ManageGalleryItems = React.createClass({
     switch (action) {
       case 'editgallery':
         EditChild = ManageEditGallery;
+        break;
+      case 'deletegallery':
+        EditChild = ManageDeleteGallery;
         break;
       case 'editimages':
         EditChild = ManageEditImages;

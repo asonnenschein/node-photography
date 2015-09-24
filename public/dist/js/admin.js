@@ -166,6 +166,29 @@ var ManageEditImages = React.createClass({displayName: "ManageEditImages",
   }
 });
 
+var ManageDeleteGallery = React.createClass({displayName: "ManageDeleteGallery",
+  render: function () {
+    var editPath = "/galleries/" + this.props.data.url_path + "/";
+    return (
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "delete-gallery-container"}, 
+          React.createElement("form", {method: "post", action: editPath, 
+            className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("input", {type: "hidden", name: "_method", value: "DELETE"}), 
+              React.createElement("legend", null, "Delete Gallery"), 
+              React.createElement("button", {type: "submit", 
+                className: "button-error pure-button"}, 
+                "Delete"
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
 var ManageAddImages = React.createClass({displayName: "ManageAddImages",
   render: function () {
     return (
@@ -212,6 +235,7 @@ var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
 
     items = [
       {"text": "Edit Gallery", "url": "#/" + route + "&action=editgallery"},
+      {"text": "Delete Gallery", "url": "#/" + route + "&action=deletegallery"},
       {"text": "Edit Images", "url": "#/" + route + "&action=editimages"},
       {"text": "Add Images", "url": "#/" + route + "&action=addimages"},
     ].map(this.generateLink);
@@ -219,6 +243,9 @@ var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
     switch (action) {
       case 'editgallery':
         EditChild = ManageEditGallery;
+        break;
+      case 'deletegallery':
+        EditChild = ManageDeleteGallery;
         break;
       case 'editimages':
         EditChild = ManageEditImages;
