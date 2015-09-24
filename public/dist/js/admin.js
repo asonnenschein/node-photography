@@ -113,30 +113,28 @@ var ManageGalleryThumb = React.createClass({displayName: "ManageGalleryThumb",
 
 var ManageEditGallery = React.createClass({displayName: "ManageEditGallery",
   render: function () {
-
     var editPath = "/galleries/" + this.props.data.url_path + "/";
-
     return (
       React.createElement("div", {className: "content-container"}, 
         React.createElement("div", {className: "create-gallery-container"}, 
           React.createElement("form", {method: "post", action: editPath, 
-            encType: "multipart/form-data", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Edit Existing Gallery"), 
               React.createElement("div", {className: "pure-control-group"}, 
                 React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
                 React.createElement("input", {name: "title", type: "text", 
-                  value: this.props.data.title})
+                  placeholder: this.props.data.title, 
+                  defaultValue: this.props.data.title})
               ), 
               React.createElement("div", {className: "pure-control-group"}, 
                 React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
                 React.createElement("textarea", {name: "description", type: "text", 
-                  value: this.props.data.description}
+                  placeholder: this.props.data.description, 
+                  defaultValue: this.props.data.description}
                 )
               ), 
-              React.createElement("input", {type: "hidden", name: "_method", value: "PUT"}), 
-              React.createElement("button", {type: "submit", name: "submit", 
+              React.createElement("button", {type: "submit", 
                 className: "pure-button pure-button-primary"}, 
                 "Submit"
               )
@@ -149,9 +147,21 @@ var ManageEditGallery = React.createClass({displayName: "ManageEditGallery",
 });
 
 var ManageEditImages = React.createClass({displayName: "ManageEditImages",
+  generateEditImageThumbs: function (gallery) {
+    return React.createElement(ManageGalleryThumb, {
+      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name, 
+      title: gallery.title, 
+      caption: gallery.caption})
+  },
   render: function () {
+    var images = this.props.data.galleriesImages
+      .map(this.generateEditImageThumbs);
     return (
-      React.createElement("div", null)
+      React.createElement("div", {className: "content-container pure-g"}, 
+        React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
+          images
+        )
+      )
     );
   }
 });

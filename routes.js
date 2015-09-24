@@ -166,16 +166,28 @@ module.exports = function (db) {
     },
 
     updateGallery: function (req, res, next) {
-      new db.Galleries({ name: req.params.gallery }).fetch()
+      var username = req.user.get('username');
+      new db.Galleries({ url_path: req.params.gallery }).fetch()
         .then(function (gallery) {
 
           if (!gallery)
             return res.status(400).send("Could not update gallery!");
 
           if (gallery.get('users_id') === req.user.id) {
+            var urlPath;
+            req.body.title = req.body.title
+              ? req.body.title
+              : gallery.get('title')
+            ;
+            req.body.description = req.body.description
+              ? req.body.description
+              : gallery.get('description')
+            ;
+            urlPath = req.body.title.replace(/ /g,'').toLowerCase();
+            req.body.url_path = urlPath;
             gallery.save(req.body, { method: 'update' })
               .then(function (update) {
-                return res.status(200).send(update);
+                return res.redirect('/users/' + username + '/#/manage');
               })
               .catch(function (error) {
                 return res.status(400).send("Could not update gallery!");

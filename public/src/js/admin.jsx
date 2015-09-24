@@ -113,30 +113,28 @@ var ManageGalleryThumb = React.createClass({
 
 var ManageEditGallery = React.createClass({
   render: function () {
-
     var editPath = "/galleries/" + this.props.data.url_path + "/";
-
     return (
       <div className="content-container">
         <div className="create-gallery-container">
           <form method="post" action={editPath}
-            encType="multipart/form-data"
             className="pure-form pure-form-aligned">
             <fieldset>
               <legend>Edit Existing Gallery</legend>
               <div className="pure-control-group">
                 <label htmlFor="title">Edit Gallery Title</label>
                 <input name="title" type="text"
-                  value={this.props.data.title} />
+                  placeholder={this.props.data.title}
+                  defaultValue={this.props.data.title} />
               </div>
               <div className="pure-control-group">
                 <label htmlFor="description">Edit Short Description</label>
                 <textarea name="description" type="text"
-                  value={this.props.data.description}>
+                  placeholder={this.props.data.description}
+                  defaultValue={this.props.data.description}>
                 </textarea>
               </div>
-              <input type="hidden" name="_method" value="PUT" />
-              <button type="submit" name="submit"
+              <button type="submit"
                 className="pure-button pure-button-primary">
                 Submit
               </button>
@@ -153,12 +151,11 @@ var ManageEditImages = React.createClass({
     return <ManageGalleryThumb
       thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name}
       title={gallery.title}
-      caption={}/>
+      caption={gallery.caption} />
   },
   render: function () {
     var images = this.props.data.galleriesImages
       .map(this.generateEditImageThumbs);
-
     return (
       <div className="content-container pure-g">
         <div className="pure-u-1-1 pure-u-lg-1-1">

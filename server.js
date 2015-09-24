@@ -104,7 +104,7 @@ server.post('/galleries/',
   }, routes.createGallery)
 ;
 
-server.put('/galleries/:gallery/',
+server.post('/galleries/:gallery/',
   checkAuthorization,
   function (req, res, next) {
     return next();
