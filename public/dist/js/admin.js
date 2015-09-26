@@ -55,7 +55,8 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
     return (
       React.createElement("div", {className: "content-container"}, 
         React.createElement("div", {className: "create-gallery-container"}, 
-          React.createElement("form", {method: "post", action: "/galleries/", encType: "multipart/form-data", 
+          React.createElement("form", {method: "post", action: "/galleries/", 
+            encType: "multipart/form-data", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Create New Gallery"), 
@@ -146,16 +147,107 @@ var ManageEditGallery = React.createClass({displayName: "ManageEditGallery",
   }
 });
 
+var GenerateSelectOptions = React.createClass({displayName: "GenerateSelectOptions",
+  render: function () {
+    if (this.props.selected === this.props.number) {
+      return (
+        React.createElement("option", {selected: "selected"}, this.props.number)
+      );
+    }
+    else {
+      return (
+        React.createElement("option", null, this.props.number)
+      );
+    }
+  }
+});
+
+var EditImagesThumb = React.createClass({displayName: "EditImagesThumb",
+  generateSelectOptions: function (number) {
+    return (
+      React.createElement(GenerateSelectOptions, {selected: this.props.order, number: number})
+    );
+  },
+  render: function () {
+    var numbers = []
+      , selectOptions
+    ;
+    for (var i = 0; i < this.props.length; i++) {
+      numbers.push(i);
+    }
+    numbers.shift()
+    selectOptions = numbers.map(this.generateSelectOptions);
+    return (
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
+          React.createElement("img", {className: "pure-img center-image", src: this.props.thumbpath}), 
+          React.createElement("form", {method: "post", action: this.props.action, 
+          className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
+                React.createElement("input", {name: "img_title", type: "text", 
+                placeholder: this.props.title})
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "caption"}, "Caption"), 
+                React.createElement("textarea", {name: "caption", type: "text", 
+                  placeholder: this.props.caption}
+                )
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "order_number"}, "Order"), 
+                React.createElement("select", {name: "order_number"}, 
+                  selectOptions
+                )
+              ), 
+              React.createElement("button", {type: "submit", name: "submit", 
+                className: "pure-button pure-button-primary"}, 
+                "Submit"
+              )
+            )
+          ), 
+          React.createElement("div", {className: "delete-image-container"}, 
+            React.createElement("form", {method: "post", action: this.props.action, 
+              className: "pure-form pure-form-aligned"}, 
+              React.createElement("fieldset", null, 
+                React.createElement("input", {type: "hidden", name: "_method", value: "DELETE"}), 
+                React.createElement("button", {type: "submit", 
+                  className: "button-error pure-button"}, 
+                  "Delete"
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
 var ManageEditImages = React.createClass({displayName: "ManageEditImages",
   generateEditImageThumbs: function (gallery) {
-    return React.createElement(ManageGalleryThumb, {
-      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name, 
-      title: gallery.title, 
+    return React.createElement(EditImagesThumb, {
+      thumbpath: '/images/' + gallery.name, 
+      action: '/galleries/' + gallery.gallery_path + '/images/'
+        + gallery.url_path + '/', 
+      title: gallery.img_title, 
+      order: gallery.order_number, 
+      length: gallery.gallery_length, 
       caption: gallery.caption})
   },
   render: function () {
     var images = this.props.data.galleriesImages
-      .map(this.generateEditImageThumbs);
+      , self = this
+    ;
+
+    images.map(function (image) {
+      image.gallery_path = self.props.data.url_path;
+      image.gallery_length = self.props.data.galleriesImages.length + 1;
+    });
+
+    images = images.map(this.generateEditImageThumbs);
+
     return (
       React.createElement("div", {className: "content-container pure-g"}, 
         React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
@@ -203,7 +295,6 @@ var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
       url: '/galleries/' + this.props.gallery + '/',
       type: 'GET',
       success: function (data) {
-        console.log(data);
         this.setState({data: data});
       }.bind(this),
       error: function (xhr, status, error) {

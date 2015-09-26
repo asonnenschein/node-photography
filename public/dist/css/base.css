@@ -283,3 +283,8 @@ label.input-file-label input[type="file"] {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   background: #ca3c3c;
 }
+.center-image {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}

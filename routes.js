@@ -220,7 +220,7 @@ module.exports = function (db) {
   }
 
   deleteGallery = function (req, res, next) {
-    new db.Galleries({ name: req.params.gallery }).fetch()
+    new db.Galleries({ url_path: req.params.gallery }).fetch()
       .then(function (gallery) {
         if (gallery.get('users_id') === req.user.id) {
           gallery.destroy()
@@ -346,6 +346,19 @@ module.exports = function (db) {
               return res.status(400).send("File does not exist!");
             }
             else {
+
+              var urlPath;
+              req.body.img_title = req.body.img_title
+                ? req.body.img_title
+                : image.get('img_title')
+              ;
+              req.body.caption = req.body.caption
+                ? req.body.caption
+                : image.get('caption')
+              ;
+              urlPath = req.body.img_title.replace(/ /g,'').toLowerCase();
+              req.body.url_path = urlPath;
+
               image.save(req.body, { method: 'update' })
                 .then(function (update) {
                   return res.status(200).send(update);
@@ -405,6 +418,15 @@ module.exports = function (db) {
 
   }
 
+  HTMLFormPutDeleteGalleriesImage = function (req, res, next) {
+    if (req.body._method && req.body._method === "DELETE") {
+      deleteGalleriesImage(req, res, next);
+    }
+    else {
+      updateGalleriesImage(req, res, next);
+    }
+  }
+
   return {
     getUser: getUser,
     updateUser: updateUser,
@@ -419,5 +441,6 @@ module.exports = function (db) {
     createGalleriesImage: createGalleriesImage,
     updateGalleriesImage: updateGalleriesImage,
     deleteGalleriesImage: deleteGalleriesImage,
+    HTMLFormPutDeleteGalleriesImage: HTMLFormPutDeleteGalleriesImage,
   }
 }
