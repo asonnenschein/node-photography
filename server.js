@@ -159,6 +159,14 @@ server.put('/galleries/:gallery/images/:image/',
   checkAuthorization,
   function (req, res, next) {
     return next();
+  }, routes.HTMLFormPutDeleteGalleriesImage)
+;
+
+/*
+server.put('/galleries/:gallery/images/:image/',
+  checkAuthorization,
+  function (req, res, next) {
+    return next();
   }, routes.updateGalleriesImage)
 ;
 
@@ -168,6 +176,7 @@ server.delete('/galleries/:gallery/images/:image/',
     return next();
   }, routes.deleteGalleriesImage)
 ;
+*/
 
 // Public Routes ===============================================================
 server.use(express.static(__dirname + '/public/'));

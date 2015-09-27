@@ -283,8 +283,38 @@ var ManageDeleteGallery = React.createClass({displayName: "ManageDeleteGallery",
 
 var ManageAddImages = React.createClass({displayName: "ManageAddImages",
   render: function () {
+
+    var action = '/galleries/' + this.props.data.url_path + '/images/';
+
     return (
-      React.createElement("div", null)
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "add-image-container"}, 
+          React.createElement("form", {method: "post", action: action, 
+            encType: "multipart/form-data", 
+            className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("legend", null, "Add New Photo"), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
+                React.createElement("input", {name: "img_title", type: "text", 
+                  placeholder: "Image Title"})
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "caption"}, "Image Caption"), 
+                React.createElement("textarea", {name: "caption", type: "text", 
+                  placeholder: "Image Caption"}
+                )
+              ), 
+              React.createElement("input", {type: "file", name: "file", 
+                accept: "application/x-zip-compressed,image/*"}), 
+              React.createElement("button", {type: "submit", name: "submit", 
+                className: "pure-button pure-button-primary"}, 
+                "Submit"
+              )
+            )
+          )
+        )
+      )
     );
   }
 });
@@ -350,13 +380,13 @@ var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
     }
 
     return (
-      React.createElement("div", {className: "pure-menu pure-menu-horizontal"}, 
-        React.createElement("ul", {className: "pure-menu-list"}, 
-          items
+      React.createElement("div", {className: "content"}, 
+        React.createElement("div", {className: "pure-menu pure-menu-horizontal"}, 
+          React.createElement("ul", {className: "pure-menu-list"}, 
+            items
+          )
         ), 
-        React.createElement("div", {className: "content"}, 
-          React.createElement(EditChild, {data: this.state.data})
-        )
+        React.createElement(EditChild, {data: this.state.data})
       )
     );
   }

@@ -283,8 +283,38 @@ var ManageDeleteGallery = React.createClass({
 
 var ManageAddImages = React.createClass({
   render: function () {
+
+    var action = '/galleries/' + this.props.data.url_path + '/images/';
+
     return (
-      <div></div>
+      <div className="content-container">
+        <div className="add-image-container">
+          <form method="post" action={action}
+            encType="multipart/form-data"
+            className="pure-form pure-form-aligned">
+            <fieldset>
+              <legend>Add New Photo</legend>
+              <div className="pure-control-group">
+                <label htmlFor="img_title">Image Title</label>
+                <input name="img_title" type="text"
+                  placeholder="Image Title" />
+              </div>
+              <div className="pure-control-group">
+                <label htmlFor="caption">Image Caption</label>
+                <textarea name="caption" type="text"
+                  placeholder="Image Caption">
+                </textarea>
+              </div>
+              <input type="file" name="file"
+                accept="application/x-zip-compressed,image/*"/>
+              <button type="submit" name="submit"
+                className="pure-button pure-button-primary">
+                Submit
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
     );
   }
 });
@@ -350,13 +380,13 @@ var ManageGalleryItems = React.createClass({
     }
 
     return (
-      <div className="pure-menu pure-menu-horizontal">
-        <ul className="pure-menu-list">
-          {items}
-        </ul>
-        <div className="content">
-          <EditChild data={this.state.data} />
+      <div className="content">
+        <div className="pure-menu pure-menu-horizontal">
+          <ul className="pure-menu-list">
+            {items}
+          </ul>
         </div>
+        <EditChild data={this.state.data} />
       </div>
     );
   }

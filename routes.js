@@ -288,7 +288,8 @@ module.exports = function (db) {
   }
 
   createGalleriesImage = function (req, res, next) {
-    new db.Galleries({ url_path: req.params.gallery }).fetch()
+    new db.Galleries({ url_path: req.params.gallery })
+      .fetch({ withRelated: ['galleriesImages'] })
       .then(function (gallery) {
         if (gallery && gallery.get('users_id') === req.user.id) {
 
@@ -296,6 +297,8 @@ module.exports = function (db) {
 
           imgUrlPath = req.files.file.originalname
             .replace(/ /g,'').toLowerCase();
+
+          console.log(gallery);
 
           imagesData = {
             "galleries_id": gallery.id,
@@ -311,6 +314,8 @@ module.exports = function (db) {
             "order_number": req.body.order_number,
             "cover_image": req.body.cover_image
           };
+
+          console.log(imagesData);
 
           new db.GalleriesImages(imagesData).save()
             .then(function (image) {
@@ -346,7 +351,6 @@ module.exports = function (db) {
               return res.status(400).send("File does not exist!");
             }
             else {
-
               var urlPath;
               req.body.img_title = req.body.img_title
                 ? req.body.img_title
@@ -358,7 +362,6 @@ module.exports = function (db) {
               ;
               urlPath = req.body.img_title.replace(/ /g,'').toLowerCase();
               req.body.url_path = urlPath;
-
               image.save(req.body, { method: 'update' })
                 .then(function (update) {
                   return res.status(200).send(update);
