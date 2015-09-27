@@ -288,17 +288,18 @@ module.exports = function (db) {
   }
 
   createGalleriesImage = function (req, res, next) {
+    var username = req.user.get('username');
     new db.Galleries({ url_path: req.params.gallery })
       .fetch({ withRelated: ['galleriesImages'] })
       .then(function (gallery) {
         if (gallery && gallery.get('users_id') === req.user.id) {
 
-          var imgUrlPath, imagesData;
+          var imgUrlPath, imagesData, existingImages;
 
           imgUrlPath = req.files.file.originalname
             .replace(/ /g,'').toLowerCase();
 
-          console.log(gallery);
+          existingImages = gallery.related('galleriesImages');
 
           imagesData = {
             "galleries_id": gallery.id,
@@ -311,17 +312,30 @@ module.exports = function (db) {
             "img_title": req.body.img_title,
             "caption": req.body.caption,
             "upload_ip": req.ip,
-            "order_number": req.body.order_number,
-            "cover_image": req.body.cover_image
+            "order_number": existingImages.length + 1,
+            "cover_image": false
           };
-
-          console.log(imagesData);
 
           new db.GalleriesImages(imagesData).save()
             .then(function (image) {
               image = image.toJSON();
               image["gallery_path"] = gallery.get("url_path");
-              return res.status(200).send(image);
+
+              var thumbPath = path.join(config.thumbnails, image.name);
+
+              gm(image.directory)
+                .resize('300', '300', '^')
+                .gravity('center')
+                .crop('300', '300')
+                .write(thumbPath, function (err) {
+                  if (err) {
+                    return res.status(404).send("Could not upload image!");
+                  }
+                  else {
+                    res.redirect('/users/' + username + '/#/manage');
+                  }
+                })
+              ;
             })
             .catch(function (error) {
               res.status(404).send("Could not upload image!");
@@ -337,6 +351,7 @@ module.exports = function (db) {
   }
 
   updateGalleriesImage = function (req, res, next) {
+    var username = req.user.get('username');
     new db.Galleries({ url_path: req.params.gallery }).fetch()
       .then(function (gallery) {
         if (gallery && gallery.get('users_id') === req.user.id) {
@@ -364,7 +379,7 @@ module.exports = function (db) {
               req.body.url_path = urlPath;
               image.save(req.body, { method: 'update' })
                 .then(function (update) {
-                  return res.status(200).send(update);
+                  res.redirect('/users/' + username + '/#/manage');
                 })
                 .catch(function (error) {
                   return res.status(400).send("Could not update image!");
@@ -385,6 +400,7 @@ module.exports = function (db) {
   }
 
   deleteGalleriesImage = function (req, res, next) {
+    var username = req.user.get('username');
     new db.Galleries({ url_path: req.params.gallery }).fetch()
       .then(function (gallery) {
         if (gallery && gallery.get('users_id') === req.user.id) {
@@ -399,7 +415,7 @@ module.exports = function (db) {
               else {
                 image.destroy()
                   .then(function (success) {
-                    return res.status(200).end();
+                    res.redirect('/users/' + username + '/#/manage');
                   })
                   .catch(function (error) {
                     return res.status(400).send("Could not delete file!");

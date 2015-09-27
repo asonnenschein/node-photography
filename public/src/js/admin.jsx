@@ -201,7 +201,7 @@ var EditImagesThumb = React.createClass({
                   {selectOptions}
                 </select>
               </div>
-              <button type="submit" name="submit"
+              <button type="submit"
                 className="pure-button pure-button-primary">
                 Submit
               </button>

@@ -24,7 +24,7 @@ Users = bookshelf.Model.extend({
     return bcrypt.compareSync(password, this.get('password'));
   },
   galleries: function () {
-    return this.hasMany(Submissions, 'galleries_id');
+    return this.hasMany(Galleries, 'galleries_id');
   }
 });
 
@@ -35,7 +35,7 @@ Galleries = bookshelf.Model.extend({
     return this.belongsTo(Users, 'users_id');
   },
   galleriesImages: function () {
-    return this.hasMany(GalleriesImages, 'galleries_images_id');
+    return this.hasMany(GalleriesImages, 'galleries_id');
   }
 });
 

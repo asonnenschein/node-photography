@@ -155,7 +155,7 @@ server.post('/galleries/:gallery/images/',
   }, routes.createGalleriesImage)
 ;
 
-server.put('/galleries/:gallery/images/:image/',
+server.post('/galleries/:gallery/images/:image/',
   checkAuthorization,
   function (req, res, next) {
     return next();
