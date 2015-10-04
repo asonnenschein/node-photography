@@ -1,11 +1,19 @@
-var HomeImageItem = React.createClass({displayName: "HomeImageItem",
+var HomeGalleryItem = React.createClass({displayName: "HomeGalleryItem",
   render: function () {
     return (
       React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
-        React.createElement("a", {href: this.props.filepath}, 
-          React.createElement("img", {className: "pure-img", src: this.props.thumbpath})
+        React.createElement("a", {href: this.props.gallery}, 
+          React.createElement("img", {className: "pure-img", src: this.props.path})
         )
       )
+    );
+  }
+});
+
+var HomeGalleryNav = React.createClass({displayName: "HomeGalleryNav",
+  render: function () {
+    return (
+      React.createElement("div", null)
     );
   }
 });
@@ -16,6 +24,7 @@ var Home = React.createClass({displayName: "Home",
       url: this.props.source,
       type: 'GET',
       success: function (data) {
+        console.log(data);
         this.setState({data: data});
       }.bind(this),
       error: function (xhr, status, error) {
@@ -24,18 +33,43 @@ var Home = React.createClass({displayName: "Home",
     });
   },
   getInitialState: function() {
-    this.props.source = "/submissions/all/files/all/";
+    this.props.source = "/galleries/";
     return {data: []};
   },
   componentDidMount: function () {
     this.loadImagesFromServer();
   },
-  generateImageItem: function (image) {
-    return React.createElement(HomeImageItem, {thumbpath: image.submissionThumbnail.directory, 
-      filepath: "/images/" + image.name})
+  generateGalleryItem: function (gallery) {
+    var i
+      , image
+      , path
+      , gallery
+      , slides
+    ;
+    slides = [];
+    for (i = 0; i < gallery.galleriesImages.length; i++) {
+      image = gallery.galleriesImages[i];
+      if (image.cover_image) {
+        image.gallery_path = gallery.url_path;
+        slides.push(image);
+/*
+        path = '/images/' + image.name;
+        gallery = gallery.url_path;
+        return <HomeGalleryItem path={path} gallery={gallery} />
+*/
+      }
+    }
+    function slippinAndSlidin () {
+
+    }
+  },
+  generateGalleryNav: function (galleries) {
+
   },
   render: function () {
-    var images = this.state.data.map(this.generateImageItem);
+    var images = this.state.data.map(this.generateGalleryItem)
+      , galleryNav = this.generateGalleryNav(this.state.data)
+    ;
     return (
       React.createElement("div", {className: "content-container pure-g"}, 
         React.createElement("div", {className: "pure-u-1 pure-u-md-1-1"}, 

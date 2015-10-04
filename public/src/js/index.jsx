@@ -81,7 +81,7 @@ var NavList = React.createClass({
             <h1>Heading</h1>
           </div>
           <div className="content">
-
+            <Home />
           </div>
         </div>
       </div>
@@ -102,21 +102,23 @@ var App = React.createClass({
       case 'users':
         Child = AdminUser;
         break;
+      case 'home':
+        Child = Home;
       default:
-        Child = NavList;
+        Child = Home;
     }
 
-    if (this.props.route !== '' | this.props.route !== 'galleries') {
+    if (!this.props.route || this.props.route === 'galleries') {
       return (
         <div>
-          <Child />
+          <NavList />
         </div>
       );
     }
     else {
       return (
         <div>
-          <NavList />
+          <Child />
         </div>
       );
     }

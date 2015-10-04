@@ -80,8 +80,8 @@ var NavList = React.createClass({displayName: "NavList",
           React.createElement("div", {className: "header"}, 
             React.createElement("h1", null, "Heading")
           ), 
-          React.createElement("div", {className: "content"}
-
+          React.createElement("div", {className: "content"}, 
+            React.createElement(Home, null)
           )
         )
       )
@@ -102,21 +102,23 @@ var App = React.createClass({displayName: "App",
       case 'users':
         Child = AdminUser;
         break;
+      case 'home':
+        Child = Home;
       default:
-        Child = NavList;
+        Child = Home;
     }
 
-    if (this.props.route !== '' | this.props.route !== 'galleries') {
+    if (!this.props.route || this.props.route === 'galleries') {
       return (
         React.createElement("div", null, 
-          React.createElement(Child, null)
+          React.createElement(NavList, null)
         )
       );
     }
     else {
       return (
         React.createElement("div", null, 
-          React.createElement(NavList, null)
+          React.createElement(Child, null)
         )
       );
     }

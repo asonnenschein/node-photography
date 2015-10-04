@@ -102,7 +102,7 @@ var CreateGallery = React.createClass({displayName: "CreateGallery",
 var ManageGalleryThumb = React.createClass({displayName: "ManageGalleryThumb",
   render: function () {
     return (
-      React.createElement("div", {className: "pure-u-1-3 pure-u-lg-1-5"}, 
+      React.createElement("div", {className: "manage-thumb pure-u-1-2 pure-u-lg-1-2"}, 
         React.createElement("a", {href: this.props.filepath}, 
           React.createElement("img", {className: "pure-img", src: this.props.thumbpath}), 
           React.createElement("span", null, this.props.title)
