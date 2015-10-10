@@ -1,5 +1,6 @@
 var HomeGalleryItem = React.createClass({
   render: function () {
+    console.log(this.props.path, this.props.gallery);
     return (
       <div className="pure-u-1-3 pure-u-lg-1-5">
         <a href={this.props.gallery}>
@@ -19,57 +20,61 @@ var HomeGalleryNav = React.createClass({
 });
 
 var Home = React.createClass({
-  loadImagesFromServer: function () {
+  getInitialState: function() {
+    this.props.source = "/galleries/";
+    return {data: null};
+  },
+  componentDidMount: function () {
     $.ajax({
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        console.log(data);
-        this.setState({data: data});
+        if (this.isMounted()) {
+          this.setState({data: data});
+        }
       }.bind(this),
       error: function (xhr, status, error) {
         console.error(this.props.source, status, error.toString());
       }.bind(this)
     });
   },
-  getInitialState: function() {
-    this.props.source = "/galleries/";
-    return {data: []};
-  },
-  componentDidMount: function () {
-    this.loadImagesFromServer();
-  },
-  generateGalleryItem: function (gallery) {
+  generateGalleryItem: function (galleries) {
     var i
       , image
       , path
       , gallery
-      , slides
     ;
-    slides = [];
-    for (i = 0; i < gallery.galleriesImages.length; i++) {
-      image = gallery.galleriesImages[i];
-      if (image.cover_image) {
-        image.gallery_path = gallery.url_path;
-        slides.push(image);
-/*
-        path = '/images/' + image.name;
-        gallery = gallery.url_path;
-        return <HomeGalleryItem path={path} gallery={gallery} />
-*/
-      }
-    }
-    function slippinAndSlidin () {
 
+    Promise.all(galleries.map(function (gallery) {
+      for (i = 0; i < gallery.galleriesImages.length; i++) {
+        image = gallery.galleriesImages[i];
+        if (image.cover_image) {
+          image.gallery_path = gallery.url_path;
+          return image;
+        }
+      }
+    })).then(function (slides) {
+      console.log(slides);
+    }).catch(function (error) {
+      console.log(error);
+    });
+
+    function slippinAndSlidin (image) {
+      path = '/images/' + image.name;
+      gallery = image.url_path;
+      return <HomeGalleryItem path={path} gallery={gallery} />
     }
+
   },
   generateGalleryNav: function (galleries) {
 
   },
   render: function () {
-    var images = this.state.data.map(this.generateGalleryItem)
-      , galleryNav = this.generateGalleryNav(this.state.data)
-    ;
+    var images, galleryNav;
+    if (this.state.data) {
+      images = this.generateGalleryItem(this.state.data);
+      galleryNav = this.generateGalleryNav(this.state.data);
+    }
     return (
       <div className="content-container pure-g">
         <div className="pure-u-1 pure-u-md-1-1">
