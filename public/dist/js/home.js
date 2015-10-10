@@ -1,9 +1,12 @@
 var HomeGalleryItem = React.createClass({displayName: "HomeGalleryItem",
   render: function () {
+    var slideClass = "slide " + this.props.active;
     return (
-      React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
-        React.createElement("a", {href: this.props.gallery}, 
-          React.createElement("img", {className: "pure-img", src: this.props.path})
+      React.createElement("div", {className: slideClass, ref: "slideImage"}, 
+        React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1", ref: "image"}, 
+          React.createElement("a", {href: this.props.gallery}, 
+            React.createElement("img", {className: "pure-img", src: this.props.path})
+          )
         )
       )
     );
@@ -28,9 +31,24 @@ var Home = React.createClass({displayName: "Home",
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        if (this.isMounted()) {
-          this.setState({data: data});
+        if (this.isMounted()) this.setState({data: data});
+        var other = [];
+        var children = $(this.getDOMNode()).find('#slideshow .slide');
+        for (var i = 0; i < children.length; i++) {
+          other.push(children[i]);
         }
+        function recurse (x) {
+          setTimeout(function () {
+            child = x.shift();
+            $(child).removeClass('active');
+            $(child).addClass('hidden');
+            $(x[0]).addClass('active');
+            $(x[0]).removeClass('hidden');
+            x.push(child);
+            recurse(x);
+          }, 5000);
+        }
+        recurse(other);
       }.bind(this),
       error: function (xhr, status, error) {
         console.error(this.props.source, status, error.toString());
@@ -41,6 +59,7 @@ var Home = React.createClass({displayName: "Home",
     var i
       , image
       , path
+      , active
       , this_gallery
     ;
     for (i = 0; i < gallery.galleriesImages.length; i++) {
@@ -49,18 +68,19 @@ var Home = React.createClass({displayName: "Home",
         image.gallery_path = gallery.url_path;
         path = '/images/' + image.name;
         this_gallery = image.url_path;
-        return React.createElement(HomeGalleryItem, {path: path, gallery: this_gallery})
+        active = arguments[1] === 0 ? 'active' : 'hidden';
+        return React.createElement(HomeGalleryItem, {path: path, gallery: this_gallery, 
+          active: active})
       }
     }
   },
   generateGalleryNav: function (galleries) {
 
   },
-  render: function () {
-    var images, galleryNav;
+  render: function (images) {
+    var self = this;
     if (this.state.data) {
-      images = this.state.data.map(this.generateGalleryItem);
-      galleryNav = this.generateGalleryNav(this.state.data);
+      images = images || this.state.data.map(this.generateGalleryItem);
       return (
         React.createElement("div", {className: "content-container pure-g"}, 
           React.createElement("div", {className: "pure-u-1 pure-u-md-1-1"}, 
@@ -68,7 +88,9 @@ var Home = React.createClass({displayName: "Home",
             )
           ), 
           React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
-            images
+            React.createElement("div", {id: "slideshow"}, 
+              images
+            )
           )
         )
       );
