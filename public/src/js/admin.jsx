@@ -322,7 +322,7 @@ var ManageAddImages = React.createClass({
 var ManageGalleryItems = React.createClass({
   loadImagesFromServer: function () {
     $.ajax({
-      url: '/galleries/' + this.props.gallery + '/',
+      url: '/galleries/' + this.props.gallery + '/?mime=json',
       type: 'GET',
       success: function (data) {
         this.setState({data: data});

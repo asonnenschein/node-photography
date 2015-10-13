@@ -71,7 +71,7 @@ var NavList = React.createClass({displayName: "NavList",
     if (this.state.data) {
       var items = this.state.data.map(this.generateItem);
       return (
-        React.createElement("div", {id: "layout", ref: "layout"}, 
+        React.createElement("div", null, 
           React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
             React.createElement("span", null)
           ), 
@@ -81,14 +81,6 @@ var NavList = React.createClass({displayName: "NavList",
             ), 
             React.createElement("ul", {className: "pure-menu-list"}, 
               items
-            )
-          ), 
-          React.createElement("div", {id: "main", ref: "main"}, 
-            React.createElement("div", {className: "header"}, 
-              React.createElement("h1", null, "Heading")
-            ), 
-            React.createElement("div", {className: "content"}, 
-              React.createElement(Home, null)
             )
           )
         )
@@ -100,7 +92,6 @@ var NavList = React.createClass({displayName: "NavList",
 
 var App = React.createClass({displayName: "App",
   render: function () {
-    var Child;
     switch (this.props.route) {
       case 'login':
         Child = AdminLogin;
@@ -113,16 +104,27 @@ var App = React.createClass({displayName: "App",
         break;
       case 'home':
         Child = Home;
-      case 'gallery':
+        break;
+      case 'galleries':
         Child = Gallery;
+        break;
       default:
         Child = Home;
+        break;
     }
 
     if (!this.props.route || this.props.route === 'galleries') {
       return (
-        React.createElement("div", null, 
-          React.createElement(NavList, null)
+        React.createElement("div", {id: "layout", ref: "layout"}, 
+          React.createElement(NavList, null), 
+          React.createElement("div", {id: "main", ref: "main"}, 
+            React.createElement("div", {className: "header"}, 
+              React.createElement("h1", null, "Heading")
+            ), 
+            React.createElement("div", {className: "content"}, 
+              React.createElement(Child, null)
+            )
+          )
         )
       );
     }

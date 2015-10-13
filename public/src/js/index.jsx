@@ -71,7 +71,7 @@ var NavList = React.createClass({
     if (this.state.data) {
       var items = this.state.data.map(this.generateItem);
       return (
-        <div id="layout" ref="layout">
+        <div>
           <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
             <span></span>
           </a>
@@ -83,14 +83,6 @@ var NavList = React.createClass({
               {items}
             </ul>
           </div>
-          <div id="main" ref="main">
-            <div className="header">
-              <h1>Heading</h1>
-            </div>
-            <div className="content">
-              <Home />
-            </div>
-          </div>
         </div>
       );
     }
@@ -100,7 +92,6 @@ var NavList = React.createClass({
 
 var App = React.createClass({
   render: function () {
-    var Child;
     switch (this.props.route) {
       case 'login':
         Child = AdminLogin;
@@ -113,16 +104,27 @@ var App = React.createClass({
         break;
       case 'home':
         Child = Home;
-      case 'gallery':
+        break;
+      case 'galleries':
         Child = Gallery;
+        break;
       default:
         Child = Home;
+        break;
     }
 
     if (!this.props.route || this.props.route === 'galleries') {
       return (
-        <div>
+        <div id="layout" ref="layout">
           <NavList />
+          <div id="main" ref="main">
+            <div className="header">
+              <h1>Heading</h1>
+            </div>
+            <div className="content">
+              <Child />
+            </div>
+          </div>
         </div>
       );
     }

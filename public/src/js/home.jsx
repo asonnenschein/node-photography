@@ -101,10 +101,10 @@ var Home = React.createClass({
       }
     }
   },
-  render: function (images) {
+  render: function () {
     var self = this, images, navs;
     if (this.state.data) {
-      images = images || this.state.data.map(this.generateGalleryItem);
+      images = this.state.data.map(this.generateGalleryItem);
       navs = this.state.data.map(this.generateGalleryNav);
       return (
         <div className="content-container pure-g">
