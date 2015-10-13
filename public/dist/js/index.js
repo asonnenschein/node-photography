@@ -44,6 +44,11 @@ var NavList = React.createClass({displayName: "NavList",
       type: 'GET',
       success: function (data) {
         if (this.isMounted()) this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
         var self = this
           , layout = React.findDOMNode(this.refs.layout)
           , menu = React.findDOMNode(this.refs.menu)
@@ -55,11 +60,6 @@ var NavList = React.createClass({displayName: "NavList",
           self.toggleClass(menu, 'active');
           self.toggleClass(menuLink, 'active');
         });
-      }.bind(this),
-      error: function (xhr, status, error) {
-        console.error(this.props.source, status, error.toString());
-      }.bind(this)
-    });
   },
   generateItem: function (item) {
     var text = item.title
@@ -71,7 +71,7 @@ var NavList = React.createClass({displayName: "NavList",
     if (this.state.data) {
       var items = this.state.data.map(this.generateItem);
       return (
-        React.createElement("div", null, 
+        React.createElement("div", {id: "layout", ref: "layout"}, 
           React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
             React.createElement("span", null)
           ), 
@@ -86,7 +86,20 @@ var NavList = React.createClass({displayName: "NavList",
         )
       );
     }
-    return React.createElement("div", null);
+    return (
+      React.createElement("div", {id: "layout", ref: "layout"}, 
+        React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
+          React.createElement("span", null)
+        ), 
+        React.createElement("div", {id: "menu", ref: "menu"}, 
+          React.createElement("div", {className: "pure-menu"}, 
+            React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
+          ), 
+          React.createElement("ul", {className: "pure-menu-list"}
+          )
+        )
+      )
+    );
   }
 });
 

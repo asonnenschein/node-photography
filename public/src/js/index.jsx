@@ -44,6 +44,11 @@ var NavList = React.createClass({
       type: 'GET',
       success: function (data) {
         if (this.isMounted()) this.setState({data: data});
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
+    });
         var self = this
           , layout = React.findDOMNode(this.refs.layout)
           , menu = React.findDOMNode(this.refs.menu)
@@ -55,11 +60,6 @@ var NavList = React.createClass({
           self.toggleClass(menu, 'active');
           self.toggleClass(menuLink, 'active');
         });
-      }.bind(this),
-      error: function (xhr, status, error) {
-        console.error(this.props.source, status, error.toString());
-      }.bind(this)
-    });
   },
   generateItem: function (item) {
     var text = item.title
@@ -71,7 +71,7 @@ var NavList = React.createClass({
     if (this.state.data) {
       var items = this.state.data.map(this.generateItem);
       return (
-        <div>
+        <div id="layout" ref="layout">
           <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
             <span></span>
           </a>
@@ -86,7 +86,20 @@ var NavList = React.createClass({
         </div>
       );
     }
-    return <div></div>;
+    return (
+      <div id="layout" ref="layout">
+        <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
+          <span></span>
+        </a>
+        <div id="menu" ref="menu">
+          <div className="pure-menu">
+            <a href="#" className="pure-menu-heading">Galleries</a>
+          </div>
+          <ul className="pure-menu-list">
+          </ul>
+        </div>
+      </div>
+    );
   }
 });
 
