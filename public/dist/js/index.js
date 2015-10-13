@@ -18,7 +18,8 @@ var NavListItem = React.createClass({displayName: "NavListItem",
 
 var NavList = React.createClass({displayName: "NavList",
   getInitialState: function () {
-    return {};
+    this.props.source = "/galleries/";
+    return {data: null};
   },
   toggleClass: function (element, className) {
     var classes = element.className.split(/\s+/)
@@ -38,54 +39,62 @@ var NavList = React.createClass({displayName: "NavList",
     element.className = classes.join(' ');
   },
   componentDidMount: function() {
-    var self = this
-      , layout = React.findDOMNode(this.refs.layout)
-      , menu = React.findDOMNode(this.refs.menu)
-      , menuLink = React.findDOMNode(this.refs.menuLink)
-    ;
-
-    menuLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      self.toggleClass(layout, 'active');
-      self.toggleClass(menu, 'active');
-      self.toggleClass(menuLink, 'active');
+    $.ajax({
+      url: this.props.source,
+      type: 'GET',
+      success: function (data) {
+        if (this.isMounted()) this.setState({data: data});
+        var self = this
+          , layout = React.findDOMNode(this.refs.layout)
+          , menu = React.findDOMNode(this.refs.menu)
+          , menuLink = React.findDOMNode(this.refs.menuLink)
+        ;
+        menuLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          self.toggleClass(layout, 'active');
+          self.toggleClass(menu, 'active');
+          self.toggleClass(menuLink, 'active');
+        });
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
     });
-
-  },
-  componentWillUnmount: function() {
-
   },
   generateItem: function (item) {
-    return React.createElement(NavListItem, {text: item.text, url: item.url})
+    var text = item.title
+      , url = "/galleries/" + item.url_path + "/"
+    ;
+    return React.createElement(NavListItem, {text: text, url: url})
   },
   render: function () {
-    var items = [
-      {"text": "About", "url": "/about"},
-      {"text": "Galleries", "url": "/galleries"}
-    ].map(this.generateItem);
-    return (
-      React.createElement("div", {id: "layout", ref: "layout"}, 
-        React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
-          React.createElement("span", null)
-        ), 
-        React.createElement("div", {id: "menu", ref: "menu"}, 
-          React.createElement("div", {className: "pure-menu"}, 
-            React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
+    if (this.state.data) {
+      var items = this.state.data.map(this.generateItem);
+      return (
+        React.createElement("div", {id: "layout", ref: "layout"}, 
+          React.createElement("a", {href: "#menu", id: "menuLink", ref: "menuLink", className: "menu-link"}, 
+            React.createElement("span", null)
           ), 
-          React.createElement("ul", {className: "pure-menu-list"}, 
-            items
-          )
-        ), 
-        React.createElement("div", {id: "main", ref: "main"}, 
-          React.createElement("div", {className: "header"}, 
-            React.createElement("h1", null, "Heading")
+          React.createElement("div", {id: "menu", ref: "menu"}, 
+            React.createElement("div", {className: "pure-menu"}, 
+              React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
+            ), 
+            React.createElement("ul", {className: "pure-menu-list"}, 
+              items
+            )
           ), 
-          React.createElement("div", {className: "content"}, 
-            React.createElement(Home, null)
+          React.createElement("div", {id: "main", ref: "main"}, 
+            React.createElement("div", {className: "header"}, 
+              React.createElement("h1", null, "Heading")
+            ), 
+            React.createElement("div", {className: "content"}, 
+              React.createElement(Home, null)
+            )
           )
         )
-      )
-    );
+      );
+    }
+    return React.createElement("div", null);
   }
 });
 
@@ -104,6 +113,8 @@ var App = React.createClass({displayName: "App",
         break;
       case 'home':
         Child = Home;
+      case 'gallery':
+        Child = Gallery;
       default:
         Child = Home;
     }

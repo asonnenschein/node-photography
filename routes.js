@@ -83,7 +83,12 @@ module.exports = function (db) {
     new db.Galleries({ url_path: req.params.gallery })
       .fetch({withRelated: 'galleriesImages'})
       .then(function (gallery) {
-        return res.status(200).send(gallery);
+        if (req.query.mime === 'json') {
+          return res.status(200).send(gallery);
+        }
+        else {
+          return next();
+        }
       })
       .catch(function (error) {
         return res.status(404).send("Could not get gallery!");

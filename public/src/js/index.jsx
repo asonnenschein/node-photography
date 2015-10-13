@@ -18,7 +18,8 @@ var NavListItem = React.createClass({
 
 var NavList = React.createClass({
   getInitialState: function () {
-    return {};
+    this.props.source = "/galleries/";
+    return {data: null};
   },
   toggleClass: function (element, className) {
     var classes = element.className.split(/\s+/)
@@ -38,54 +39,62 @@ var NavList = React.createClass({
     element.className = classes.join(' ');
   },
   componentDidMount: function() {
-    var self = this
-      , layout = React.findDOMNode(this.refs.layout)
-      , menu = React.findDOMNode(this.refs.menu)
-      , menuLink = React.findDOMNode(this.refs.menuLink)
-    ;
-
-    menuLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      self.toggleClass(layout, 'active');
-      self.toggleClass(menu, 'active');
-      self.toggleClass(menuLink, 'active');
+    $.ajax({
+      url: this.props.source,
+      type: 'GET',
+      success: function (data) {
+        if (this.isMounted()) this.setState({data: data});
+        var self = this
+          , layout = React.findDOMNode(this.refs.layout)
+          , menu = React.findDOMNode(this.refs.menu)
+          , menuLink = React.findDOMNode(this.refs.menuLink)
+        ;
+        menuLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          self.toggleClass(layout, 'active');
+          self.toggleClass(menu, 'active');
+          self.toggleClass(menuLink, 'active');
+        });
+      }.bind(this),
+      error: function (xhr, status, error) {
+        console.error(this.props.source, status, error.toString());
+      }.bind(this)
     });
-
-  },
-  componentWillUnmount: function() {
-
   },
   generateItem: function (item) {
-    return <NavListItem text={item.text} url={item.url} />
+    var text = item.title
+      , url = "/galleries/" + item.url_path + "/"
+    ;
+    return <NavListItem text={text} url={url} />
   },
   render: function () {
-    var items = [
-      {"text": "About", "url": "/about"},
-      {"text": "Galleries", "url": "/galleries"}
-    ].map(this.generateItem);
-    return (
-      <div id="layout" ref="layout">
-        <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
-          <span></span>
-        </a>
-        <div id="menu" ref="menu">
-          <div className="pure-menu">
-            <a href="#" className="pure-menu-heading">Galleries</a>
+    if (this.state.data) {
+      var items = this.state.data.map(this.generateItem);
+      return (
+        <div id="layout" ref="layout">
+          <a href="#menu" id="menuLink" ref="menuLink" className="menu-link">
+            <span></span>
+          </a>
+          <div id="menu" ref="menu">
+            <div className="pure-menu">
+              <a href="#" className="pure-menu-heading">Galleries</a>
+            </div>
+            <ul className="pure-menu-list">
+              {items}
+            </ul>
           </div>
-          <ul className="pure-menu-list">
-            {items}
-          </ul>
+          <div id="main" ref="main">
+            <div className="header">
+              <h1>Heading</h1>
+            </div>
+            <div className="content">
+              <Home />
+            </div>
+          </div>
         </div>
-        <div id="main" ref="main">
-          <div className="header">
-            <h1>Heading</h1>
-          </div>
-          <div className="content">
-            <Home />
-          </div>
-        </div>
-      </div>
-    );
+      );
+    }
+    return <div></div>;
   }
 });
 
@@ -104,6 +113,8 @@ var App = React.createClass({
         break;
       case 'home':
         Child = Home;
+      case 'gallery':
+        Child = Gallery;
       default:
         Child = Home;
     }

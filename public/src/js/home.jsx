@@ -15,8 +15,13 @@ var HomeGalleryItem = React.createClass({
 
 var HomeGalleryNav = React.createClass({
   render: function () {
+    var imageClass = "pure-menu-link " + this.props.position;
     return (
-      <div></div>
+      <li className="pure-menu-item">
+        <a href={this.props.gallery} className={imageClass}>
+          <img src={this.props.path}></img>
+        </a>
+      </li>
     );
   }
 });
@@ -74,13 +79,33 @@ var Home = React.createClass({
       }
     }
   },
-  generateGalleryNav: function (galleries) {
-
+  generateGalleryNav: function (gallery) {
+    var i
+      , image
+      , path
+      , position
+      , this_gallery
+    ;
+    for (i = 0; i < gallery.galleriesImages.length; i++) {
+      image = gallery.galleriesImages[i];
+      if (image.cover_image) {
+        image.gallery_path = gallery.url_path;
+        path = '/thumbnails/' + image.name;
+        this_gallery = image.url_path;
+        position = arguments[1] === 0 || arguments[1] === arguments[2].length
+          ? 'position-end'
+          : 'position-middle'
+        ;
+        return <HomeGalleryNav path={path} gallery={this_gallery}
+          position={position}/>
+      }
+    }
   },
   render: function (images) {
-    var self = this;
+    var self = this, images, navs;
     if (this.state.data) {
       images = images || this.state.data.map(this.generateGalleryItem);
+      navs = this.state.data.map(this.generateGalleryNav);
       return (
         <div className="content-container pure-g">
           <div className="pure-u-1 pure-u-md-1-1">
@@ -91,6 +116,11 @@ var Home = React.createClass({
             <div id="slideshow">
               {images}
             </div>
+          </div>
+          <div className="pure-menu pure-menu-horizontal pure-menu-scrollable">
+            <ul className="pure-menu-list">
+              {navs}
+            </ul>
           </div>
         </div>
       );
