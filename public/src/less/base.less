@@ -254,6 +254,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 }
 
+/* MISCELLANEOUS ============================================================ */
+.header {
+    border-bottom: none;
+}
+
+.header h2 {
+    color: #000;
+}
+
 /* ADMIN ==================================================================== */
 
 .auth-form-container {
@@ -271,7 +280,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 }
 
 .create-gallery-container input, textarea {
-    width: 77%;
+    width: 100%;
 }
 
 @media (max-width: 999px) {
@@ -330,8 +339,17 @@ label.input-file-label input[type="file"] {
     text-align: left;
 }
 
+.edit-image-container input, textarea {
+    width: 100%;
+}
+
+.edit-image-container .pure-form-aligned .pure-control-group label {
+    text-align: initial;
+    width: initial;
+}
+
 .add-image-container input, textarea {
-    width: 77%;
+    width: 100%;
 }
 
 @media (max-width: 999px) {
@@ -365,6 +383,22 @@ label.input-file-label input[type="file"] {
     padding-right: 0;
 }
 
+.pure-menu-list .pure-menu-item a.pure-menu-link {
+    background-color: transparent;
+}
+
 .pure-menu-list .pure-menu-item a.pure-menu-link:hover {
     background-color: transparent;
+}
+
+/* GALLERY ================================================================== */
+#slideshow .slide {
+    h4 {
+        margin-bottom: 0px;
+        margin-top: 16px;
+    }
+    p {
+        margin-bottom: 8px;
+        margin-top: 0px;
+    }
 }

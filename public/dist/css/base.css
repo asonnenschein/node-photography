@@ -228,6 +228,13 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     left: 150px;
   }
 }
+/* MISCELLANEOUS ============================================================ */
+.header {
+  border-bottom: none;
+}
+.header h2 {
+  color: #000;
+}
 /* ADMIN ==================================================================== */
 .auth-form-container {
   max-width: 200px;
@@ -243,7 +250,7 @@ button {
 }
 .create-gallery-container input,
 textarea {
-  width: 77%;
+  width: 100%;
 }
 @media (max-width: 999px) {
   .create-gallery-container input,
@@ -291,9 +298,17 @@ label.input-file-label input[type="file"] {
 .add-image-container .pure-form-aligned .pure-control-group label {
   text-align: left;
 }
+.edit-image-container input,
+textarea {
+  width: 100%;
+}
+.edit-image-container .pure-form-aligned .pure-control-group label {
+  text-align: initial;
+  width: initial;
+}
 .add-image-container input,
 textarea {
-  width: 77%;
+  width: 100%;
 }
 @media (max-width: 999px) {
   .add-image-container input,
@@ -322,6 +337,18 @@ textarea {
   padding-left: 16px;
   padding-right: 0;
 }
+.pure-menu-list .pure-menu-item a.pure-menu-link {
+  background-color: transparent;
+}
 .pure-menu-list .pure-menu-item a.pure-menu-link:hover {
   background-color: transparent;
+}
+/* GALLERY ================================================================== */
+#slideshow .slide h4 {
+  margin-bottom: 0px;
+  margin-top: 16px;
+}
+#slideshow .slide p {
+  margin-bottom: 8px;
+  margin-top: 0px;
 }

@@ -179,42 +179,45 @@ var EditImagesThumb = React.createClass({displayName: "EditImagesThumb",
     selectOptions = numbers.map(this.generateSelectOptions);
     return (
       React.createElement("div", {className: "content-container"}, 
-        React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
-          React.createElement("img", {className: "pure-img center-image", src: this.props.thumbpath}), 
-          React.createElement("form", {method: "post", action: this.props.action, 
-          className: "pure-form pure-form-aligned"}, 
-            React.createElement("fieldset", null, 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
-                React.createElement("input", {name: "img_title", type: "text", 
-                placeholder: this.props.title})
-              ), 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "caption"}, "Caption"), 
-                React.createElement("textarea", {name: "caption", type: "text", 
-                  placeholder: this.props.caption}
-                )
-              ), 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "order_number"}, "Order"), 
-                React.createElement("select", {name: "order_number"}, 
-                  selectOptions
-                )
-              ), 
-              React.createElement("button", {type: "submit", 
-                className: "pure-button pure-button-primary"}, 
-                "Submit"
-              )
-            )
-          ), 
-          React.createElement("div", {className: "delete-image-container"}, 
+        React.createElement("div", {className: "edit-image-container"}, 
+          React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
+            React.createElement("img", {className: "pure-img center-image", 
+              src: this.props.thumbpath}), 
             React.createElement("form", {method: "post", action: this.props.action, 
-              className: "pure-form pure-form-aligned"}, 
+            className: "pure-form pure-form-aligned"}, 
               React.createElement("fieldset", null, 
-                React.createElement("input", {type: "hidden", name: "_method", value: "DELETE"}), 
+                React.createElement("div", {className: "pure-control-group"}, 
+                  React.createElement("label", {htmlFor: "img_title"}, "Image Title"), 
+                  React.createElement("input", {name: "img_title", type: "text", 
+                  placeholder: this.props.title})
+                ), 
+                React.createElement("div", {className: "pure-control-group"}, 
+                  React.createElement("label", {htmlFor: "caption"}, "Caption"), 
+                  React.createElement("textarea", {name: "caption", type: "text", 
+                    placeholder: this.props.caption}
+                  )
+                ), 
+                React.createElement("div", {className: "pure-control-group"}, 
+                  React.createElement("label", {htmlFor: "order_number"}, "Order"), 
+                  React.createElement("select", {name: "order_number"}, 
+                    selectOptions
+                  )
+                ), 
                 React.createElement("button", {type: "submit", 
-                  className: "button-error pure-button"}, 
-                  "Delete"
+                  className: "pure-button pure-button-primary"}, 
+                  "Submit"
+                )
+              )
+            ), 
+            React.createElement("div", {className: "delete-image-container"}, 
+              React.createElement("form", {method: "post", action: this.props.action, 
+                className: "pure-form pure-form-aligned"}, 
+                React.createElement("fieldset", null, 
+                  React.createElement("input", {type: "hidden", name: "_method", value: "DELETE"}), 
+                  React.createElement("button", {type: "submit", 
+                    className: "button-error pure-button"}, 
+                    "Delete"
+                  )
                 )
               )
             )

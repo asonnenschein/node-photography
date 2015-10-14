@@ -131,9 +131,6 @@ var App = React.createClass({displayName: "App",
         React.createElement("div", {id: "layout", ref: "layout"}, 
           React.createElement(NavList, null), 
           React.createElement("div", {id: "main", ref: "main"}, 
-            React.createElement("div", {className: "header"}, 
-              React.createElement("h1", null, "Heading")
-            ), 
             React.createElement("div", {className: "content"}, 
               React.createElement(Child, null)
             )

@@ -179,45 +179,48 @@ var EditImagesThumb = React.createClass({
     selectOptions = numbers.map(this.generateSelectOptions);
     return (
       <div className="content-container">
-        <div className="pure-u-1-1 pure-u-lg-1-1">
-          <img className="pure-img center-image" src={this.props.thumbpath} />
-          <form method="post" action={this.props.action}
-          className="pure-form pure-form-aligned">
-            <fieldset>
-              <div className="pure-control-group">
-                <label htmlFor="img_title">Image Title</label>
-                <input name="img_title" type="text"
-                placeholder={this.props.title} />
-              </div>
-              <div className="pure-control-group">
-                <label htmlFor="caption">Caption</label>
-                <textarea name="caption" type="text"
-                  placeholder={this.props.caption}>
-                </textarea>
-              </div>
-              <div className="pure-control-group">
-                <label htmlFor="order_number">Order</label>
-                <select name="order_number">
-                  {selectOptions}
-                </select>
-              </div>
-              <button type="submit"
-                className="pure-button pure-button-primary">
-                Submit
-              </button>
-            </fieldset>
-          </form>
-          <div className="delete-image-container">
+        <div className="edit-image-container">
+          <div className="pure-u-1-1 pure-u-lg-1-1">
+            <img className="pure-img center-image"
+              src={this.props.thumbpath} />
             <form method="post" action={this.props.action}
-              className="pure-form pure-form-aligned">
+            className="pure-form pure-form-aligned">
               <fieldset>
-                <input type="hidden" name="_method" value="DELETE" />
+                <div className="pure-control-group">
+                  <label htmlFor="img_title">Image Title</label>
+                  <input name="img_title" type="text"
+                  placeholder={this.props.title} />
+                </div>
+                <div className="pure-control-group">
+                  <label htmlFor="caption">Caption</label>
+                  <textarea name="caption" type="text"
+                    placeholder={this.props.caption}>
+                  </textarea>
+                </div>
+                <div className="pure-control-group">
+                  <label htmlFor="order_number">Order</label>
+                  <select name="order_number">
+                    {selectOptions}
+                  </select>
+                </div>
                 <button type="submit"
-                  className="button-error pure-button">
-                  Delete
+                  className="pure-button pure-button-primary">
+                  Submit
                 </button>
               </fieldset>
             </form>
+            <div className="delete-image-container">
+              <form method="post" action={this.props.action}
+                className="pure-form pure-form-aligned">
+                <fieldset>
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button type="submit"
+                    className="button-error pure-button">
+                    Delete
+                  </button>
+                </fieldset>
+              </form>
+            </div>
           </div>
         </div>
       </div>

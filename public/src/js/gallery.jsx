@@ -1,3 +1,5 @@
+var SlideShowTimeout;
+
 var GalleryItem = React.createClass({
   render: function () {
     var slideClass = "slide " + this.props.active;
@@ -5,6 +7,8 @@ var GalleryItem = React.createClass({
       <div className={slideClass} ref="slideImage">
         <div className="pure-u-1-1 pure-u-lg-1-1" ref="image">
           <img className="pure-img" src={this.props.path} />
+          <h4>{this.props.title}</h4>
+          <p>{this.props.caption}</p>
         </div>
       </div>
     );
@@ -12,11 +16,29 @@ var GalleryItem = React.createClass({
 });
 
 var GalleryNav = React.createClass({
+  handleClick: function (event) {
+    var slides, i, image, source;
+    slides = $('#slideshow .slide');
+    for (i = 0; i < slides.length; i++) {
+      image = $(slides[i]);
+      source = image.find('img').attr('src').split('/images/')[1];
+      if (image.hasClass('active')) {
+        image.removeClass('active').addClass('hidden');
+      }
+      if (source === this.props.name) {
+        clearTimeout(SlideShowTimeout);
+        if (image.hasClass('hidden')) {
+          image.removeClass('hidden').addClass('active');
+        }
+      }
+    }
+  },
   render: function () {
     var imageClass = "pure-menu-link " + this.props.position;
     return (
       <li className="pure-menu-item">
-        <a href={this.props.gallery} className={imageClass}>
+        <a href="javascript:void(0);" className={imageClass}
+          onClick={this.handleClick}>
           <img src={this.props.path}></img>
         </a>
       </li>
@@ -42,7 +64,7 @@ var Gallery = React.createClass({
             other.push(children[i]);
           }
           function recurse (x) {
-            setTimeout(function () {
+            SlideShowTimeout = setTimeout(function () {
               child = x.shift();
               $(child).removeClass('active');
               $(child).addClass('hidden');
@@ -63,22 +85,29 @@ var Gallery = React.createClass({
   generateGalleryItem: function (image) {
     var path
       , active
+      , title
+      , caption
     ;
     path = '/images/' + image.name;
     active = arguments[1] === 0 ? 'active' : 'hidden';
-    return <GalleryItem path={path} active={active} />
+    title = image.img_title;
+    caption = image.caption;
+    return <GalleryItem path={path} active={active} title={title}
+      caption={caption}/>;
   },
   generateGalleryNav: function (image) {
     var image
       , path
+      , name
       , position
     ;
     path = '/thumbnails/' + image.name;
+    name = image.name;
     position = arguments[1] === 0 || arguments[1] === arguments[2].length
       ? 'position-end'
       : 'position-middle'
     ;
-    return <GalleryNav path={path} position={position}/>
+    return <GalleryNav path={path} position={position} name={name}/>;
   },
   render: function () {
     var self = this, images, navs;
@@ -89,6 +118,7 @@ var Gallery = React.createClass({
         <div className="content-container pure-g">
           <div className="pure-u-1 pure-u-md-1-1">
             <div className="header">
+              <h2>{this.state.data.title}</h2>
             </div>
           </div>
           <div className="pure-u-1-1 pure-u-lg-1-1">

@@ -65,16 +65,15 @@ var Home = React.createClass({
       , image
       , path
       , active
-      , this_gallery
+      , gallery_path
     ;
     for (i = 0; i < gallery.galleriesImages.length; i++) {
       image = gallery.galleriesImages[i];
       if (image.cover_image) {
-        image.gallery_path = gallery.url_path;
+        gallery_path = '/galleries/' + gallery.url_path;
         path = '/images/' + image.name;
-        this_gallery = image.url_path;
         active = arguments[1] === 0 ? 'active' : 'hidden';
-        return <HomeGalleryItem path={path} gallery={this_gallery}
+        return <HomeGalleryItem path={path} gallery={gallery_path}
           active={active} />
       }
     }
@@ -89,14 +88,13 @@ var Home = React.createClass({
     for (i = 0; i < gallery.galleriesImages.length; i++) {
       image = gallery.galleriesImages[i];
       if (image.cover_image) {
-        image.gallery_path = gallery.url_path;
+        gallery_path = '/galleries/' + gallery.url_path;
         path = '/thumbnails/' + image.name;
-        this_gallery = image.url_path;
         position = arguments[1] === 0 || arguments[1] === arguments[2].length
           ? 'position-end'
           : 'position-middle'
         ;
-        return <HomeGalleryNav path={path} gallery={this_gallery}
+        return <HomeGalleryNav path={path} gallery={gallery_path}
           position={position}/>
       }
     }
@@ -110,6 +108,7 @@ var Home = React.createClass({
         <div className="content-container pure-g">
           <div className="pure-u-1 pure-u-md-1-1">
             <div className="header">
+              <h2>Joe Sonnenschein Photography</h2>
             </div>
           </div>
           <div className="pure-u-1-1 pure-u-lg-1-1">

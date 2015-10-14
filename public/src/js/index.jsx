@@ -131,9 +131,6 @@ var App = React.createClass({
         <div id="layout" ref="layout">
           <NavList />
           <div id="main" ref="main">
-            <div className="header">
-              <h1>Heading</h1>
-            </div>
             <div className="content">
               <Child />
             </div>
