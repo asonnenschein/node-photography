@@ -106,11 +106,6 @@ var Home = React.createClass({displayName: "Home",
       navs = this.state.data.map(this.generateGalleryNav);
       return (
         React.createElement("div", {className: "content-container pure-g"}, 
-          React.createElement("div", {className: "pure-u-1 pure-u-md-1-1"}, 
-            React.createElement("div", {className: "header"}, 
-              React.createElement("h2", null, "Joe Sonnenschein Photography")
-            )
-          ), 
           React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
             React.createElement("div", {id: "slideshow"}, 
               images

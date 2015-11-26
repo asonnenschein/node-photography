@@ -30,6 +30,7 @@ This is the parent `<div>` that contains the menu and the content area.
 #layout {
   position: relative;
   padding-left: 0;
+  margin-top: 50px;
 }
 #layout.active #menu {
   left: 150px;
@@ -76,7 +77,7 @@ The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
 appears on the left side of the page.
 */
 #menu {
-  margin-left: -150px;
+  margin-left: -125px;
   /* "#menu" width */
   width: 150px;
   position: fixed;
@@ -85,9 +86,10 @@ appears on the left side of the page.
   bottom: 0;
   z-index: 1000;
   /* so the menu or its navicon stays above all content */
-  background: #191818;
+  background: #ffffff;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  margin-top: 50px;
 }
 /*
     All anchors inside the menu should be styled like this.
@@ -96,6 +98,7 @@ appears on the left side of the page.
   color: #999;
   border: none;
   padding: 0.6em 0 0.6em 0.6em;
+  font-family: 'Novecentosanswide-Book';
 }
 /*
     Remove all background/borders, since we are applying them to #menu.
@@ -122,9 +125,13 @@ appears on the left side of the page.
 /*
     This styles the selected menu item `<li>`.
     */
+#menu .pure-menu a.pure-menu-heading {
+  font-size: 200%;
+}
 #menu .pure-menu-selected,
 #menu .pure-menu-heading {
-  background: #1f8dd6;
+  background: #ffffff;
+  padding-left: 8px;
 }
 /*
         This styles a link within a selected menu item `<li>`.
@@ -136,8 +143,9 @@ appears on the left side of the page.
     This styles the menu heading.
     */
 #menu .pure-menu-heading {
+  padding-top: 0px;
   font-size: 110%;
-  color: #fff;
+  color: #000000;
   margin: 0;
 }
 /* -- Dynamic Button For Responsive Menu -------------------------------------*/
@@ -329,6 +337,9 @@ textarea {
     height: auto;
   }
 }
+#menu .pure-menu-list.hidden {
+  display: none;
+}
 .pure-menu-list .pure-menu-item a.pure-menu-link.position-end {
   padding-left: 0;
   padding-right: 0;
@@ -351,4 +362,10 @@ textarea {
 #slideshow .slide p {
   margin-bottom: 8px;
   margin-top: 0px;
+}
+#projectsList.pure-menu-list .pure-menu-item.active {
+  font-weight: bold;
+}
+#projectsList.pure-menu-list .pure-menu-item.active a {
+  color: #000000;
 }

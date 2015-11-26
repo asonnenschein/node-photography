@@ -56,7 +56,9 @@ var Gallery = React.createClass({displayName: "Gallery",
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        if (this.isMounted()) this.setState({data: data});
+        if (this.isMounted()) {
+          this.setState({data: data});
+        }
         var other = [];
         var children = $(this.getDOMNode()).find('#slideshow .slide');
         if (children.length > 1) {
@@ -116,11 +118,6 @@ var Gallery = React.createClass({displayName: "Gallery",
       navs = this.state.data.galleriesImages.map(this.generateGalleryNav);
       return (
         React.createElement("div", {className: "content-container pure-g"}, 
-          React.createElement("div", {className: "pure-u-1 pure-u-md-1-1"}, 
-            React.createElement("div", {className: "header"}, 
-              React.createElement("h2", null, this.state.data.title)
-            )
-          ), 
           React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
             React.createElement("div", {id: "slideshow"}, 
               images

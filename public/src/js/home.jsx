@@ -106,11 +106,6 @@ var Home = React.createClass({
       navs = this.state.data.map(this.generateGalleryNav);
       return (
         <div className="content-container pure-g">
-          <div className="pure-u-1 pure-u-md-1-1">
-            <div className="header">
-              <h2>Joe Sonnenschein Photography</h2>
-            </div>
-          </div>
           <div className="pure-u-1-1 pure-u-lg-1-1">
             <div id="slideshow">
               {images}

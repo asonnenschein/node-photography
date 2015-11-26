@@ -34,6 +34,7 @@ This is the parent `<div>` that contains the menu and the content area.
 #layout {
     position: relative;
     padding-left: 0;
+    margin-top: 50px;
 }
     #layout.active #menu {
         left: 150px;
@@ -87,16 +88,17 @@ appears on the left side of the page.
 */
 
 #menu {
-    margin-left: -150px; /* "#menu" width */
+    margin-left: -125px; /* "#menu" width */
     width: 150px;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     z-index: 1000; /* so the menu or its navicon stays above all content */
-    background: #191818;
+    background: #ffffff;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    margin-top: 50px;
 }
     /*
     All anchors inside the menu should be styled like this.
@@ -105,6 +107,7 @@ appears on the left side of the page.
         color: #999;
         border: none;
         padding: 0.6em 0 0.6em 0.6em;
+        font-family: 'Novecentosanswide-Book';
     }
 
     /*
@@ -134,9 +137,15 @@ appears on the left side of the page.
     /*
     This styles the selected menu item `<li>`.
     */
+
+    #menu .pure-menu a.pure-menu-heading {
+        font-size: 200%;
+    }
+
     #menu .pure-menu-selected,
     #menu .pure-menu-heading {
-        background: #1f8dd6;
+        background: #ffffff;
+        padding-left: 8px;
     }
         /*
         This styles a link within a selected menu item `<li>`.
@@ -149,8 +158,9 @@ appears on the left side of the page.
     This styles the menu heading.
     */
     #menu .pure-menu-heading {
+        padding-top: 0px;
         font-size: 110%;
-        color: #fff;
+        color: #000000;
         margin: 0;
     }
 
@@ -373,6 +383,10 @@ label.input-file-label input[type="file"] {
     }
 }
 
+#menu .pure-menu-list.hidden {
+    display:none
+}
+
 .pure-menu-list .pure-menu-item a.pure-menu-link.position-end {
     padding-left: 0;
     padding-right: 0;
@@ -401,4 +415,13 @@ label.input-file-label input[type="file"] {
         margin-bottom: 8px;
         margin-top: 0px;
     }
+}
+
+#projectsList.pure-menu-list .pure-menu-item.active {
+    font-weight: bold;
+
+    a {
+        color: #000000;
+    }
+
 }

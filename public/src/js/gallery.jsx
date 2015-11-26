@@ -56,7 +56,9 @@ var Gallery = React.createClass({
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        if (this.isMounted()) this.setState({data: data});
+        if (this.isMounted()) {
+          this.setState({data: data});
+        }
         var other = [];
         var children = $(this.getDOMNode()).find('#slideshow .slide');
         if (children.length > 1) {
@@ -116,11 +118,6 @@ var Gallery = React.createClass({
       navs = this.state.data.galleriesImages.map(this.generateGalleryNav);
       return (
         <div className="content-container pure-g">
-          <div className="pure-u-1 pure-u-md-1-1">
-            <div className="header">
-              <h2>{this.state.data.title}</h2>
-            </div>
-          </div>
           <div className="pure-u-1-1 pure-u-lg-1-1">
             <div id="slideshow">
               {images}

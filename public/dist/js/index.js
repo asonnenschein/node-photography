@@ -10,9 +10,34 @@ var NavListItem = React.createClass({displayName: "NavListItem",
   generateLink: function () {
     return React.createElement(NavListLink, {url: this.props.url, text: this.props.text});
   },
+  toggleClass: function (element, className) {
+    var classes = element.className.split(/\s+/)
+      , length = classes.length
+      , i = 0
+    ;
+
+    for (i; i < length; i++) {
+      if (classes[i] === className) {
+        classes.splice(i, 1);
+        break;
+      }
+    }
+    if (length === classes.length) {
+      classes.push(className);
+    }
+    element.className = classes.join(' ');
+  },
+  componentDidMount: function () {
+    var route = window.location.pathname.split('/').filter(Boolean)[1]
+      , active = React.findDOMNode(this.refs[route])
+    ;
+    if (active) {
+      this.toggleClass(active, 'active');
+    }
+  },
   render: function () {
     var content = this.generateLink();
-    return (React.createElement("li", {className: "pure-menu-item"}, content));
+    return (React.createElement("li", {id: this.props.path, ref: this.props.path, className: "pure-menu-item"}, content, " "));
   }
 });
 
@@ -43,29 +68,44 @@ var NavList = React.createClass({displayName: "NavList",
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        if (this.isMounted()) this.setState({data: data});
+        if (this.isMounted()) {
+          this.setState({data: data})
+        };
       }.bind(this),
       error: function (xhr, status, error) {
         console.error(this.props.source, status, error.toString());
       }.bind(this)
     });
-        var self = this
-          , layout = React.findDOMNode(this.refs.layout)
-          , menu = React.findDOMNode(this.refs.menu)
-          , menuLink = React.findDOMNode(this.refs.menuLink)
-        ;
-        menuLink.addEventListener('click', function (e) {
-          e.preventDefault();
-          self.toggleClass(layout, 'active');
-          self.toggleClass(menu, 'active');
-          self.toggleClass(menuLink, 'active');
-        });
+    var self = this
+      , layout = React.findDOMNode(this.refs.layout)
+      , menu = React.findDOMNode(this.refs.menu)
+      , menuLink = React.findDOMNode(this.refs.menuLink)
+      , projectsCtrl = React.findDOMNode(this.refs.projectsCtrl)
+      , projectsList = React.findDOMNode(this.refs.projectsList)
+      , route = window.location.pathname.split('/').filter(Boolean)
+    ;
+
+    if (route[0] === 'galleries' && route[1]) {
+      self.toggleClass(projectsList, 'hidden');
+    }
+
+    projectsCtrl.addEventListener('click', function (e) {
+      e.preventDefault();
+      self.toggleClass(projectsList, 'hidden');
+    });
+
+    menuLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      self.toggleClass(layout, 'active');
+      self.toggleClass(menu, 'active');
+      self.toggleClass(menuLink, 'active');
+    });
   },
   generateItem: function (item) {
     var text = item.title
       , url = "/galleries/" + item.url_path + "/"
     ;
-    return React.createElement(NavListItem, {text: text, url: url})
+    return React.createElement(NavListItem, {text: text, url: url, path: item.url_path})
   },
   render: function () {
     if (this.state.data) {
@@ -77,11 +117,15 @@ var NavList = React.createClass({displayName: "NavList",
           ), 
           React.createElement("div", {id: "menu", ref: "menu"}, 
             React.createElement("div", {className: "pure-menu"}, 
-              React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
+              React.createElement("a", {href: "/", className: "pure-menu-heading"}, "Images")
             ), 
-            React.createElement("ul", {className: "pure-menu-list"}, 
+            React.createElement("a", {href: "/portfolio/", className: "pure-menu-heading"}, "Portfolio"), 
+            React.createElement("a", {href: "#", id: "projectsCtrl", ref: "projectsCtrl", className: "pure-menu-heading"}, "Projects"), 
+            React.createElement("ul", {id: "projectsList", ref: "projectsList", className: "pure-menu-list hidden"}, 
               items
-            )
+            ), 
+            React.createElement("a", {href: "/about/", className: "pure-menu-heading"}, "About"), 
+            React.createElement("a", {href: "/contact/", className: "pure-menu-heading"}, "Contact")
           )
         )
       );
@@ -93,10 +137,14 @@ var NavList = React.createClass({displayName: "NavList",
         ), 
         React.createElement("div", {id: "menu", ref: "menu"}, 
           React.createElement("div", {className: "pure-menu"}, 
-            React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Galleries")
+            React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Images")
           ), 
-          React.createElement("ul", {className: "pure-menu-list"}
-          )
+          React.createElement("a", {href: "/portfolio/", className: "pure-menu-heading"}, "Portfolio"), 
+          React.createElement("a", {href: "#", id: "projectsCtrl", ref: "projectsCtrl", className: "pure-menu-heading"}, "Projects"), 
+          React.createElement("ul", {id: "projectsList", ref: "projectsList", className: "pure-menu-list hidden"}
+          ), 
+          React.createElement("a", {href: "/about/", className: "pure-menu-heading"}, "About"), 
+          React.createElement("a", {href: "/contact/", className: "pure-menu-heading"}, "Contact")
         )
       )
     );
