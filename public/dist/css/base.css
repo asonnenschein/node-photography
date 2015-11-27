@@ -363,6 +363,9 @@ textarea {
   margin-bottom: 8px;
   margin-top: 0px;
 }
+#projectsList {
+  padding-left: 10px;
+}
 #projectsList.pure-menu-list .pure-menu-item.active {
   font-weight: bold;
 }

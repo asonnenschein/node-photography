@@ -109,6 +109,9 @@ var NavList = React.createClass({displayName: "NavList",
   },
   render: function () {
     if (this.state.data) {
+      this.state.data.unshift({"title": "Recent", "url_path": "new_images"}
+        , {"title": "All", "url_path": "all_images"})
+      ;
       var items = this.state.data.map(this.generateItem);
       return (
         React.createElement("div", {id: "layout", ref: "layout"}, 
@@ -119,7 +122,6 @@ var NavList = React.createClass({displayName: "NavList",
             React.createElement("div", {className: "pure-menu"}, 
               React.createElement("a", {href: "/", className: "pure-menu-heading"}, "Images")
             ), 
-            React.createElement("a", {href: "/portfolio/", className: "pure-menu-heading"}, "Portfolio"), 
             React.createElement("a", {href: "#", id: "projectsCtrl", ref: "projectsCtrl", className: "pure-menu-heading"}, "Projects"), 
             React.createElement("ul", {id: "projectsList", ref: "projectsList", className: "pure-menu-list hidden"}, 
               items
@@ -139,7 +141,6 @@ var NavList = React.createClass({displayName: "NavList",
           React.createElement("div", {className: "pure-menu"}, 
             React.createElement("a", {href: "#", className: "pure-menu-heading"}, "Images")
           ), 
-          React.createElement("a", {href: "/portfolio/", className: "pure-menu-heading"}, "Portfolio"), 
           React.createElement("a", {href: "#", id: "projectsCtrl", ref: "projectsCtrl", className: "pure-menu-heading"}, "Projects"), 
           React.createElement("ul", {id: "projectsList", ref: "projectsList", className: "pure-menu-list hidden"}
           ), 
