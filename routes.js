@@ -12,12 +12,17 @@ module.exports = function (db) {
     , getGallery
     , createGallery
     , HTMLFormPutDeleteGallery
+    , HTMLFormPutDeleteGalleriesImage
     , updateGallery
     , getGalleriesImages
     , getGalleriesImage
     , createGalleriesImage
     , updateGalleriesImage
     , deleteGalleriesImage
+    , getAbout
+    , getContact
+    , postAbout
+    , postContact
   ;
 
 
@@ -69,14 +74,40 @@ module.exports = function (db) {
   // Galleries Routes ========================================================
 
   getGalleries = function (req, res, next) {
-    new db.Galleries().fetchAll({withRelated: 'galleriesImages'})
-      .then(function (galleries) {
-        return res.status(200).send(galleries);
-      })
-      .catch(function (error) {
-        return res.status(404).send("Could not get galleries!");
-      })
+    var path = req.path.replace(/\//g, "")
+      , limit = path === 'recent' ? 20 : null
     ;
+
+    if (path === 'recent' || path === 'all') {
+      db.GalleriesRecent(limit)
+        .then(function (images) {
+          if (req.query.mime === 'json') {
+            return res.status(200).send(images);
+          }
+          return next();
+        })
+        .catch(function (error) {
+          return res.status(404).send("Could not get galleries!");
+        })
+      ;
+    }
+    else {
+      new db.Galleries().fetchAll({withRelated: 'galleriesImages'})
+        .then(function (galleries) {
+          if (req.query.mime === 'json') {
+            galleries.unshift([{"title": "Recent", "url_path": "recent"},
+              {"title": "All", "url_path": "all"}]);
+            return res.status(200).send(galleries);
+          }
+          else {
+            return next();
+          }
+        })
+        .catch(function (error) {
+          return res.status(404).send("Could not get galleries!");
+        })
+      ;
+    }
   }
 
   getGallery = function (req, res, next) {
@@ -449,6 +480,24 @@ module.exports = function (db) {
     else {
       updateGalleriesImage(req, res, next);
     }
+  }
+
+  // About & Contact Routes ====================================================
+
+  getAbout =  function (req, res, next) {
+
+  }
+
+  getContact =  function (req, res, next) {
+
+  }
+
+  postAbout =  function (req, res, next) {
+
+  }
+
+  postContact =  function (req, res, next) {
+
   }
 
   return {

@@ -8,7 +8,6 @@ var GalleryItem = React.createClass({
         <div className="pure-u-1-1 pure-u-lg-1-1" ref="image">
           <img className="pure-img" src={this.props.path} />
           <h4>{this.props.title}</h4>
-          <p>{this.props.caption}</p>
         </div>
       </div>
     );
@@ -88,14 +87,11 @@ var Gallery = React.createClass({
     var path
       , active
       , title
-      , caption
     ;
     path = '/images/' + image.name;
     active = arguments[1] === 0 ? 'active' : 'hidden';
     title = image.img_title;
-    caption = image.caption;
-    return <GalleryItem path={path} active={active} title={title}
-      caption={caption}/>;
+    return <GalleryItem path={path} active={active} title={title}/>;
   },
   generateGalleryNav: function (image) {
     var image
@@ -112,10 +108,16 @@ var Gallery = React.createClass({
     return <GalleryNav path={path} position={position} name={name}/>;
   },
   render: function () {
-    var self = this, images, navs;
+    var self = this, images, navs, data;
     if (this.state.data) {
-      images = this.state.data.galleriesImages.map(this.generateGalleryItem);
-      navs = this.state.data.galleriesImages.map(this.generateGalleryNav);
+      if (this.state.data.hasOwnProperty('galleriesImages')) {
+        data = this.state.data.galleriesImages;
+      }
+      else {
+        data = this.state.data;
+      }
+      images = data.map(this.generateGalleryItem);
+      navs = data.map(this.generateGalleryNav);
       return (
         <div className="content-container pure-g">
           <div className="pure-u-1-1 pure-u-lg-1-1">

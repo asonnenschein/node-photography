@@ -7,8 +7,7 @@ var GalleryItem = React.createClass({displayName: "GalleryItem",
       React.createElement("div", {className: slideClass, ref: "slideImage"}, 
         React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1", ref: "image"}, 
           React.createElement("img", {className: "pure-img", src: this.props.path}), 
-          React.createElement("h4", null, this.props.title), 
-          React.createElement("p", null, this.props.caption)
+          React.createElement("h4", null, this.props.title)
         )
       )
     );
@@ -88,14 +87,11 @@ var Gallery = React.createClass({displayName: "Gallery",
     var path
       , active
       , title
-      , caption
     ;
     path = '/images/' + image.name;
     active = arguments[1] === 0 ? 'active' : 'hidden';
     title = image.img_title;
-    caption = image.caption;
-    return React.createElement(GalleryItem, {path: path, active: active, title: title, 
-      caption: caption});
+    return React.createElement(GalleryItem, {path: path, active: active, title: title});
   },
   generateGalleryNav: function (image) {
     var image
@@ -112,10 +108,16 @@ var Gallery = React.createClass({displayName: "Gallery",
     return React.createElement(GalleryNav, {path: path, position: position, name: name});
   },
   render: function () {
-    var self = this, images, navs;
+    var self = this, images, navs, data;
     if (this.state.data) {
-      images = this.state.data.galleriesImages.map(this.generateGalleryItem);
-      navs = this.state.data.galleriesImages.map(this.generateGalleryNav);
+      if (this.state.data.hasOwnProperty('galleriesImages')) {
+        data = this.state.data.galleriesImages;
+      }
+      else {
+        data = this.state.data;
+      }
+      images = data.map(this.generateGalleryItem);
+      navs = data.map(this.generateGalleryNav);
       return (
         React.createElement("div", {className: "content-container pure-g"}, 
           React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 

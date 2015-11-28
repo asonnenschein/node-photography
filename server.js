@@ -78,7 +78,7 @@ server.put('/users/:username/',
 ;
 
 // Galleries Routes ============================================================
-server.get('/galleries/',
+server.get(['/galleries/', '/all/', '/recent/'],
   function (req, res, next) {
     return next();
   }, routes.getGalleries)
@@ -144,6 +144,31 @@ server.post('/galleries/:gallery/images/:image/',
   function (req, res, next) {
     return next();
   }, routes.HTMLFormPutDeleteGalleriesImage)
+;
+
+// About & Contact Routes ======================================================
+server.get('/about/',
+  function (req, res, next) {
+    return next();
+  })
+;
+
+server.get('/contact/',
+  function (req, res, next) {
+    return next();
+  })
+;
+
+server.post('/about/',
+  function (req, res, next) {
+    return next();
+  })
+;
+
+server.post('/contact/',
+  function (req, res, next) {
+    return next();
+  })
 ;
 
 // Public Routes ===============================================================

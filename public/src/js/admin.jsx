@@ -398,7 +398,7 @@ var ManageGalleryItems = React.createClass({
 var ManageGallery = React.createClass({
   loadImagesFromServer: function () {
     $.ajax({
-      url: '/galleries/',
+      url: "/galleries/" + "?mime=json",
       type: 'GET',
       success: function (data) {
         this.setState({data: data});
@@ -415,10 +415,12 @@ var ManageGallery = React.createClass({
     this.loadImagesFromServer();
   },
   generateManageGalleryThumb: function (gallery) {
-    return <ManageGalleryThumb
-      filepath={'#/manage/?gallery=' + gallery.url_path}
-      thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name}
-      title={gallery.title} />
+    if (gallery.hasOwnProperty('galleriesImages')) {
+      return <ManageGalleryThumb
+        filepath={'#/manage/?gallery=' + gallery.url_path}
+        thumbpath={'/thumbnails/' + gallery.galleriesImages[0].name}
+        title={gallery.title} />
+    }
   },
   render: function () {
     var images = this.state.data.map(this.generateManageGalleryThumb);
@@ -435,6 +437,75 @@ var ManageGallery = React.createClass({
 var AdminNull = React.createClass({
   render: function () {
     return null;
+  }
+});
+
+var EditAbout = React.createClass({
+  render: function () {
+    return (
+      <div className="content-container">
+        <div className="create-gallery-container">
+          <form method="post" action="/about/"
+            className="pure-form pure-form-aligned">
+            <fieldset>
+              <legend>Edit Existing Gallery</legend>
+              <div className="pure-control-group">
+                <label htmlFor="title">Edit Gallery Title</label>
+                <input name="title" type="text"
+                  placeholder={this.props.data.title}
+                  defaultValue={this.props.data.title} />
+              </div>
+              <div className="pure-control-group">
+                <label htmlFor="description">Edit Short Description</label>
+                <textarea name="description" type="text"
+                  placeholder={this.props.data.description}
+                  defaultValue={this.props.data.description}>
+                </textarea>
+              </div>
+              <button type="submit"
+                className="pure-button pure-button-primary">
+                Submit
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    );
+  }
+});
+
+var EditContact = React.createClass({
+  render: function () {
+    return (
+      <div className="content-container">
+        <div className="create-gallery-container">
+          <form method="post" action="/contact/"
+            className="pure-form pure-form-aligned">
+            <fieldset>
+              <legend>Edit Existing Gallery</legend>
+              <div className="pure-control-group">
+                <label htmlFor="title">Edit Gallery Title</label>
+                <input name="title" type="text"
+                  placeholder={this.props.data.title}
+                  defaultValue={this.props.data.title} />
+              </div>
+              <div className="pure-control-group">
+                <label htmlFor="description">Edit Short Description</label>
+                <textarea name="description" type="text"
+                  placeholder={this.props.data.description}
+                  defaultValue={this.props.data.description}>
+                </textarea>
+              </div>
+              <button type="submit"
+                className="pure-button pure-button-primary">
+                Submit
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    );
+
   }
 });
 
@@ -488,6 +559,8 @@ var AdminUser = React.createClass({
     items = [
       {"text": "Create Gallery", "url": "#/create"},
       {"text": "Manage Gallery", "url": "#/manage"},
+      {"text": "Edit About", "url": "#/about"},
+      {"text": "Edit Contact", "url": "#/contact"},
       {"text": "Home", "url": "/"},
     ].map(this.generateItem);
 
@@ -496,6 +569,9 @@ var AdminUser = React.createClass({
     if (route && route.indexOf('=') > -1) {
       gallery = route.split('=').filter(Boolean)[1];
       route = 'queryparams';
+    }
+    else if (['about', 'contact'].indexOf(route) > -1) {
+      gallery = route;
     }
     else {
       gallery = null;
@@ -507,6 +583,12 @@ var AdminUser = React.createClass({
         break;
       case 'manage':
         AdminChild = ManageGallery;
+        break;
+      case 'about':
+        AdminChild = EditAbout;
+        break;
+      case 'contact':
+        AdminChild = EditContact;
         break;
       case 'queryparams':
         AdminChild = ManageGalleryItems;

@@ -398,7 +398,7 @@ var ManageGalleryItems = React.createClass({displayName: "ManageGalleryItems",
 var ManageGallery = React.createClass({displayName: "ManageGallery",
   loadImagesFromServer: function () {
     $.ajax({
-      url: '/galleries/',
+      url: "/galleries/" + "?mime=json",
       type: 'GET',
       success: function (data) {
         this.setState({data: data});
@@ -415,10 +415,12 @@ var ManageGallery = React.createClass({displayName: "ManageGallery",
     this.loadImagesFromServer();
   },
   generateManageGalleryThumb: function (gallery) {
-    return React.createElement(ManageGalleryThumb, {
-      filepath: '#/manage/?gallery=' + gallery.url_path, 
-      thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name, 
-      title: gallery.title})
+    if (gallery.hasOwnProperty('galleriesImages')) {
+      return React.createElement(ManageGalleryThumb, {
+        filepath: '#/manage/?gallery=' + gallery.url_path, 
+        thumbpath: '/thumbnails/' + gallery.galleriesImages[0].name, 
+        title: gallery.title})
+    }
   },
   render: function () {
     var images = this.state.data.map(this.generateManageGalleryThumb);
@@ -435,6 +437,75 @@ var ManageGallery = React.createClass({displayName: "ManageGallery",
 var AdminNull = React.createClass({displayName: "AdminNull",
   render: function () {
     return null;
+  }
+});
+
+var EditAbout = React.createClass({displayName: "EditAbout",
+  render: function () {
+    return (
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "create-gallery-container"}, 
+          React.createElement("form", {method: "post", action: "/about/", 
+            className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("legend", null, "Edit Existing Gallery"), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
+                React.createElement("input", {name: "title", type: "text", 
+                  placeholder: this.props.data.title, 
+                  defaultValue: this.props.data.title})
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
+                React.createElement("textarea", {name: "description", type: "text", 
+                  placeholder: this.props.data.description, 
+                  defaultValue: this.props.data.description}
+                )
+              ), 
+              React.createElement("button", {type: "submit", 
+                className: "pure-button pure-button-primary"}, 
+                "Submit"
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
+var EditContact = React.createClass({displayName: "EditContact",
+  render: function () {
+    return (
+      React.createElement("div", {className: "content-container"}, 
+        React.createElement("div", {className: "create-gallery-container"}, 
+          React.createElement("form", {method: "post", action: "/contact/", 
+            className: "pure-form pure-form-aligned"}, 
+            React.createElement("fieldset", null, 
+              React.createElement("legend", null, "Edit Existing Gallery"), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
+                React.createElement("input", {name: "title", type: "text", 
+                  placeholder: this.props.data.title, 
+                  defaultValue: this.props.data.title})
+              ), 
+              React.createElement("div", {className: "pure-control-group"}, 
+                React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
+                React.createElement("textarea", {name: "description", type: "text", 
+                  placeholder: this.props.data.description, 
+                  defaultValue: this.props.data.description}
+                )
+              ), 
+              React.createElement("button", {type: "submit", 
+                className: "pure-button pure-button-primary"}, 
+                "Submit"
+              )
+            )
+          )
+        )
+      )
+    );
+
   }
 });
 
@@ -488,6 +559,8 @@ var AdminUser = React.createClass({displayName: "AdminUser",
     items = [
       {"text": "Create Gallery", "url": "#/create"},
       {"text": "Manage Gallery", "url": "#/manage"},
+      {"text": "Edit About", "url": "#/about"},
+      {"text": "Edit Contact", "url": "#/contact"},
       {"text": "Home", "url": "/"},
     ].map(this.generateItem);
 
@@ -496,6 +569,9 @@ var AdminUser = React.createClass({displayName: "AdminUser",
     if (route && route.indexOf('=') > -1) {
       gallery = route.split('=').filter(Boolean)[1];
       route = 'queryparams';
+    }
+    else if (['about', 'contact'].indexOf(route) > -1) {
+      gallery = route;
     }
     else {
       gallery = null;
@@ -507,6 +583,12 @@ var AdminUser = React.createClass({displayName: "AdminUser",
         break;
       case 'manage':
         AdminChild = ManageGallery;
+        break;
+      case 'about':
+        AdminChild = EditAbout;
+        break;
+      case 'contact':
+        AdminChild = EditContact;
         break;
       case 'queryparams':
         AdminChild = ManageGalleryItems;

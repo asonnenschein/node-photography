@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt-nodejs')
   , bookshelf = require('bookshelf')(knex)
   , Users
   , Galleries
+  , GalleriesRecentAll
   , GalleriesImages
 ;
 
@@ -50,8 +51,23 @@ GalleriesImages = bookshelf.Model.extend({
   },
 });
 
+GalleriesRecentAll = function (limit) {
+  var query = knex('galleries_images')
+    .join('galleries', 'galleries_images.galleries_id', '=',
+      'galleries.galleries_id')
+    .select('galleries_images.url_path', 'galleries_images.original_name',
+      'galleries_images.name', 'galleries_images.img_title',
+      'galleries.url_path AS galleries_path')
+    .orderBy('uploaded_datetime', 'desc')
+  ;
+
+  if (limit) query.limit(limit);
+  return query;
+}
+
 module.exports = {
   "Users": Users,
   "Galleries": Galleries,
+  "GalleriesRecent": GalleriesRecentAll,
   "GalleriesImages": GalleriesImages,
 };

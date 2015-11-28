@@ -13,22 +13,9 @@ var HomeGalleryItem = React.createClass({displayName: "HomeGalleryItem",
   }
 });
 
-var HomeGalleryNav = React.createClass({displayName: "HomeGalleryNav",
-  render: function () {
-    var imageClass = "pure-menu-link " + this.props.position;
-    return (
-      React.createElement("li", {className: "pure-menu-item"}, 
-        React.createElement("a", {href: this.props.gallery, className: imageClass}, 
-          React.createElement("img", {src: this.props.path})
-        )
-      )
-    );
-  }
-});
-
 var Home = React.createClass({displayName: "Home",
   getInitialState: function() {
-    this.props.source = "/galleries/";
+    this.props.source = "/galleries/" + "?mime=json";
     return {data: null};
   },
   componentDidMount: function () {
@@ -36,7 +23,9 @@ var Home = React.createClass({displayName: "Home",
       url: this.props.source,
       type: 'GET',
       success: function (data) {
-        if (this.isMounted()) this.setState({data: data});
+        if (this.isMounted()) {
+          this.setState({data: data});
+        }
         var other = [];
         var children = $(this.getDOMNode()).find('#slideshow .slide');
         for (var i = 0; i < children.length; i++) {
@@ -67,35 +56,16 @@ var Home = React.createClass({displayName: "Home",
       , active
       , gallery_path
     ;
-    for (i = 0; i < gallery.galleriesImages.length; i++) {
-      image = gallery.galleriesImages[i];
-      if (image.cover_image) {
-        gallery_path = '/galleries/' + gallery.url_path;
-        path = '/images/' + image.name;
-        active = arguments[1] === 0 ? 'active' : 'hidden';
-        return React.createElement(HomeGalleryItem, {path: path, gallery: gallery_path, 
-          active: active})
-      }
-    }
-  },
-  generateGalleryNav: function (gallery) {
-    var i
-      , image
-      , path
-      , position
-      , this_gallery
-    ;
-    for (i = 0; i < gallery.galleriesImages.length; i++) {
-      image = gallery.galleriesImages[i];
-      if (image.cover_image) {
-        gallery_path = '/galleries/' + gallery.url_path;
-        path = '/thumbnails/' + image.name;
-        position = arguments[1] === 0 || arguments[1] === arguments[2].length
-          ? 'position-end'
-          : 'position-middle'
-        ;
-        return React.createElement(HomeGalleryNav, {path: path, gallery: gallery_path, 
-          position: position})
+    if (gallery.hasOwnProperty('galleriesImages')) {
+      for (i = 0; i < gallery.galleriesImages.length; i++) {
+        image = gallery.galleriesImages[i];
+        if (image.cover_image) {
+          gallery_path = '/galleries/' + gallery.url_path;
+          path = '/images/' + image.name;
+          active = arguments[1] === 2 ? 'active' : 'hidden';
+          return React.createElement(HomeGalleryItem, {path: path, gallery: gallery_path, 
+            active: active})
+        }
       }
     }
   },
@@ -103,17 +73,11 @@ var Home = React.createClass({displayName: "Home",
     var self = this, images, navs;
     if (this.state.data) {
       images = this.state.data.map(this.generateGalleryItem);
-      navs = this.state.data.map(this.generateGalleryNav);
       return (
         React.createElement("div", {className: "content-container pure-g"}, 
           React.createElement("div", {className: "pure-u-1-1 pure-u-lg-1-1"}, 
             React.createElement("div", {id: "slideshow"}, 
               images
-            )
-          ), 
-          React.createElement("div", {className: "pure-menu pure-menu-horizontal pure-menu-scrollable"}, 
-            React.createElement("ul", {className: "pure-menu-list"}, 
-              navs
             )
           )
         )

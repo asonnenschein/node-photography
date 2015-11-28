@@ -43,7 +43,7 @@ var NavListItem = React.createClass({
 
 var NavList = React.createClass({
   getInitialState: function () {
-    this.props.source = "/galleries/";
+    this.props.source = "/galleries/" + "?mime=json";
     return {data: null};
   },
   toggleClass: function (element, className) {
@@ -83,9 +83,10 @@ var NavList = React.createClass({
       , projectsCtrl = React.findDOMNode(this.refs.projectsCtrl)
       , projectsList = React.findDOMNode(this.refs.projectsList)
       , route = window.location.pathname.split('/').filter(Boolean)
+      , specialRoute = ['all', 'recent'].indexOf(route[0]) > -1
     ;
 
-    if (route[0] === 'galleries' && route[1]) {
+    if (route[0] === 'galleries' && route[1] || specialRoute) {
       self.toggleClass(projectsList, 'hidden');
     }
 
@@ -105,13 +106,15 @@ var NavList = React.createClass({
     var text = item.title
       , url = "/galleries/" + item.url_path + "/"
     ;
+
+    if (!item.hasOwnProperty('galleries_id')) {
+      url = "/" + item.url_path + "/";
+    }
+
     return <NavListItem text={text} url={url} path={item.url_path} />
   },
   render: function () {
     if (this.state.data) {
-      this.state.data.unshift({"title": "Recent", "url_path": "new_images"}
-        , {"title": "All", "url_path": "all_images"})
-      ;
       var items = this.state.data.map(this.generateItem);
       return (
         <div id="layout" ref="layout">
@@ -122,7 +125,7 @@ var NavList = React.createClass({
             <div className="pure-menu">
               <a href="/" className="pure-menu-heading">Images</a>
             </div>
-            <a href="#" id="projectsCtrl" ref="projectsCtrl" className="pure-menu-heading">Projects</a>
+            <a href="#" id="projectsCtrl" ref="projectsCtrl" className="pure-menu-heading">Work</a>
             <ul id="projectsList" ref="projectsList" className="pure-menu-list hidden">
               {items}
             </ul>
@@ -141,7 +144,7 @@ var NavList = React.createClass({
           <div className="pure-menu">
             <a href="#" className="pure-menu-heading">Images</a>
           </div>
-          <a href="#" id="projectsCtrl" ref="projectsCtrl" className="pure-menu-heading">Projects</a>
+          <a href="#" id="projectsCtrl" ref="projectsCtrl" className="pure-menu-heading">Work</a>
           <ul id="projectsList" ref="projectsList" className="pure-menu-list hidden">
           </ul>
           <a href="/about/" className="pure-menu-heading">About</a>
@@ -154,6 +157,8 @@ var NavList = React.createClass({
 
 var App = React.createClass({
   render: function () {
+    var special;
+
     switch (this.props.route) {
       case 'login':
         Child = AdminLogin;
@@ -170,12 +175,20 @@ var App = React.createClass({
       case 'galleries':
         Child = Gallery;
         break;
+      case 'all':
+        Child = Gallery;
+        break;
+      case 'recent':
+        Child = Gallery;
+        break;
       default:
         Child = Home;
         break;
     }
 
-    if (!this.props.route || this.props.route === 'galleries') {
+    special = ['galleries', 'all', 'recent'].indexOf(this.props.route) > -1;
+
+    if (!this.props.route || special) {
       return (
         <div id="layout" ref="layout">
           <NavList />

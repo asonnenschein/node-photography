@@ -14,7 +14,6 @@ CREATE TABLE galleries (
     name UUID DEFAULT uuid_generate_v4() NOT NULL,
     url_path VARCHAR,
     title VARCHAR,
-    description VARCHAR,
     created_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -29,16 +28,11 @@ CREATE TABLE galleries_images (
     name VARCHAR,
     img_title VARCHAR,
     url_path VARCHAR,
-    caption VARCHAR (5000),
     cover_image BOOLEAN DEFAULT FALSE,
     order_number INTEGER,
     upload_ip VARCHAR,
     uploaded_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-ALTER TABLE users OWNER TO photojoe_user;
-ALTER TABLE galleries OWNER TO photojoe_user;
-ALTER TABLE galleries_images OWNER TO photojoe_user;
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO photojoe_user;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO photojoe_user;
