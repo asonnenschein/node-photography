@@ -126,6 +126,7 @@ appears on the left side of the page.
     */
 #menu .pure-menu a.pure-menu-heading {
   font-size: 200%;
+  padding-bottom: 35px;
 }
 #menu a.pure-menu-link {
   padding-top: 0px;

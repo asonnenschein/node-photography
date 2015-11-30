@@ -58,6 +58,7 @@ var Gallery = React.createClass({displayName: "Gallery",
         if (this.isMounted()) {
           this.setState({data: data});
         }
+        /*
         var other = [];
         var children = $(this.getDOMNode()).find('#slideshow .slide');
         if (children.length > 1) {
@@ -77,6 +78,7 @@ var Gallery = React.createClass({displayName: "Gallery",
           }
           recurse(other);
         }
+        */
       }.bind(this),
       error: function (xhr, status, error) {
         console.error(this.props.source, status, error.toString());
