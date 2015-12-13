@@ -150,25 +150,27 @@ server.post('/galleries/:gallery/images/:image/',
 server.get('/about/',
   function (req, res, next) {
     return next();
-  })
+  }, routes.getAbout)
 ;
 
 server.get('/contact/',
   function (req, res, next) {
     return next();
-  })
+  }, routes.getContact)
 ;
 
 server.post('/about/',
+  checkAuthorization,
   function (req, res, next) {
     return next();
-  })
+  }, routes.postAbout)
 ;
 
 server.post('/contact/',
+  checkAuthorization,
   function (req, res, next) {
     return next();
-  })
+  }, routes.postContact)
 ;
 
 // Public Routes ===============================================================

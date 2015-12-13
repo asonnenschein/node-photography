@@ -484,19 +484,33 @@ module.exports = function (db) {
 
   // About & Contact Routes ====================================================
 
-  getAbout =  function (req, res, next) {
+  getAbout = function (req, res, next) {
+    db.UsersProfiles().fetchAll()
+      .then(function (profile) {
+        console.log(profile);
+      })
+      .catch(function (error) {
+        return res.status(404).send("Could not get about!");
+      })
+    ;
+  }
+
+  getContact = function (req, res, next) {
+    db.UsersProfiles().fetchAll()
+      .then(function (profile) {
+        console.log(profile);
+      })
+      .catch(function (error) {
+        return res.status(404).send("Could not get contact!");
+      })
+    ;
+  }
+
+  postAbout = function (req, res, next) {
 
   }
 
-  getContact =  function (req, res, next) {
-
-  }
-
-  postAbout =  function (req, res, next) {
-
-  }
-
-  postContact =  function (req, res, next) {
+  postContact = function (req, res, next) {
 
   }
 

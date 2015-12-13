@@ -448,18 +448,11 @@ var EditAbout = React.createClass({
           <form method="post" action="/about/"
             className="pure-form pure-form-aligned">
             <fieldset>
-              <legend>Edit Existing Gallery</legend>
+              <legend>Edit About Page</legend>
               <div className="pure-control-group">
-                <label htmlFor="title">Edit Gallery Title</label>
-                <input name="title" type="text"
-                  placeholder={this.props.data.title}
-                  defaultValue={this.props.data.title} />
-              </div>
-              <div className="pure-control-group">
-                <label htmlFor="description">Edit Short Description</label>
                 <textarea name="description" type="text"
-                  placeholder={this.props.data.description}
-                  defaultValue={this.props.data.description}>
+                  placeholder={this.props.data.about}
+                  defaultValue={this.props.data.about}>
                 </textarea>
               </div>
               <button type="submit"
@@ -482,18 +475,11 @@ var EditContact = React.createClass({
           <form method="post" action="/contact/"
             className="pure-form pure-form-aligned">
             <fieldset>
-              <legend>Edit Existing Gallery</legend>
+              <legend>Edit Contact Page</legend>
               <div className="pure-control-group">
-                <label htmlFor="title">Edit Gallery Title</label>
-                <input name="title" type="text"
-                  placeholder={this.props.data.title}
-                  defaultValue={this.props.data.title} />
-              </div>
-              <div className="pure-control-group">
-                <label htmlFor="description">Edit Short Description</label>
                 <textarea name="description" type="text"
-                  placeholder={this.props.data.description}
-                  defaultValue={this.props.data.description}>
+                  placeholder={this.props.data.contact}
+                  defaultValue={this.props.data.contact}>
                 </textarea>
               </div>
               <button type="submit"

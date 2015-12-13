@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt-nodejs')
   , knex = require('knex')(config.db)
   , bookshelf = require('bookshelf')(knex)
   , Users
+  , UsersProfiles
   , Galleries
   , GalleriesRecentAll
   , GalleriesImages
@@ -26,6 +27,14 @@ Users = bookshelf.Model.extend({
   },
   galleries: function () {
     return this.hasMany(Galleries, 'galleries_id');
+  }
+});
+
+UsersProfiles = bookshelf.Model.extend({
+  tableName: 'users_profiles',
+  idAttribute: 'users_profiles_id',
+  user: function () {
+    this.belongsTo(Users, 'users_id');
   }
 });
 

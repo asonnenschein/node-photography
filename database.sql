@@ -8,6 +8,14 @@ CREATE TABLE users (
     registration_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE users_profiles (
+    users_profiles_id SERIAL PRIMARY KEY,
+    users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,
+    about VARCHAR,
+    contact VARCHAR,
+    updated_datetime TIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE galleries (
     galleries_id SERIAL PRIMARY KEY,
     users_id INTEGER REFERENCES users(users_id) ON DELETE CASCADE,

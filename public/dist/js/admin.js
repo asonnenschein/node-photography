@@ -448,18 +448,11 @@ var EditAbout = React.createClass({displayName: "EditAbout",
           React.createElement("form", {method: "post", action: "/about/", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
-              React.createElement("legend", null, "Edit Existing Gallery"), 
+              React.createElement("legend", null, "Edit About Page"), 
               React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
-                React.createElement("input", {name: "title", type: "text", 
-                  placeholder: this.props.data.title, 
-                  defaultValue: this.props.data.title})
-              ), 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
                 React.createElement("textarea", {name: "description", type: "text", 
-                  placeholder: this.props.data.description, 
-                  defaultValue: this.props.data.description}
+                  placeholder: this.props.data.about, 
+                  defaultValue: this.props.data.about}
                 )
               ), 
               React.createElement("button", {type: "submit", 
@@ -482,18 +475,11 @@ var EditContact = React.createClass({displayName: "EditContact",
           React.createElement("form", {method: "post", action: "/contact/", 
             className: "pure-form pure-form-aligned"}, 
             React.createElement("fieldset", null, 
-              React.createElement("legend", null, "Edit Existing Gallery"), 
+              React.createElement("legend", null, "Edit Contact Page"), 
               React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "title"}, "Edit Gallery Title"), 
-                React.createElement("input", {name: "title", type: "text", 
-                  placeholder: this.props.data.title, 
-                  defaultValue: this.props.data.title})
-              ), 
-              React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("label", {htmlFor: "description"}, "Edit Short Description"), 
                 React.createElement("textarea", {name: "description", type: "text", 
-                  placeholder: this.props.data.description, 
-                  defaultValue: this.props.data.description}
+                  placeholder: this.props.data.contact, 
+                  defaultValue: this.props.data.contact}
                 )
               ), 
               React.createElement("button", {type: "submit", 
