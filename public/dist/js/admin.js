@@ -450,9 +450,7 @@ var EditAbout = React.createClass({displayName: "EditAbout",
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Edit About Page"), 
               React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("textarea", {name: "description", type: "text", 
-                  placeholder: this.props.data.about, 
-                  defaultValue: this.props.data.about}
+                React.createElement("textarea", {name: "about", type: "text"}
                 )
               ), 
               React.createElement("button", {type: "submit", 
@@ -477,9 +475,7 @@ var EditContact = React.createClass({displayName: "EditContact",
             React.createElement("fieldset", null, 
               React.createElement("legend", null, "Edit Contact Page"), 
               React.createElement("div", {className: "pure-control-group"}, 
-                React.createElement("textarea", {name: "description", type: "text", 
-                  placeholder: this.props.data.contact, 
-                  defaultValue: this.props.data.contact}
+                React.createElement("textarea", {name: "contact", type: "text"}
                 )
               ), 
               React.createElement("button", {type: "submit", 

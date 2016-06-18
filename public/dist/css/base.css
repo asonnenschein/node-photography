@@ -376,3 +376,11 @@ textarea {
 #projectsList.pure-menu-list .pure-menu-item.active a {
   color: #000000;
 }
+/* ABOUT ==================================================================== */
+.about.header {
+  font-family: 'Novecentosanswide-Book';
+}
+/* CONTACT ================================================================== */
+.contact.header {
+  font-family: 'Novecentosanswide-Book';
+}

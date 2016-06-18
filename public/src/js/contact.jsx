@@ -1,4 +1,4 @@
-var About = React.createClass({
+var Contact = React.createClass({
   getInitialState: function () {
     this.props.source = location.pathname + "?mime=json";
     return {data: null};
@@ -21,24 +21,24 @@ var About = React.createClass({
     this.loadAboutFromServer();
   },
   render: function () {
-    var about;
+    var contact;
     if (this.state.data) {
-      if (this.state.data[0].hasOwnProperty('about')) {
-        about = this.state.data[0].about;
+      if (this.state.data[0].hasOwnProperty('contact')) {
+        contact = this.state.data[0].contact;
       }
       else {
-        about = '';
+        contact = '';
       }
       return (
         <div className="content-container pure-g">
           <div className="pure-u-1 pure-u-md-1-1">
-            <div className="about header">
-              <h2>About</h2>
+            <div className="contact header">
+              <h2>Contact</h2>
             </div>
           </div>
           <div className="pure-u-1 pure-u-md-1-1">
             <p>
-              {about}
+              {contact}
             </p>
           </div>
         </div>

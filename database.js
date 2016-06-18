@@ -76,6 +76,7 @@ GalleriesRecentAll = function (limit) {
 
 module.exports = {
   "Users": Users,
+  "UsersProfiles": UsersProfiles,
   "Galleries": Galleries,
   "GalleriesRecent": GalleriesRecentAll,
   "GalleriesImages": GalleriesImages,

@@ -181,12 +181,19 @@ var App = React.createClass({displayName: "App",
       case 'recent':
         Child = Gallery;
         break;
+      case 'about':
+        Child = About;
+        break;
+      case 'contact':
+        Child = Contact;
+        break;
       default:
         Child = Home;
         break;
     }
 
-    special = ['galleries', 'all', 'recent'].indexOf(this.props.route) > -1;
+    special = ['galleries', 'all', 'recent', 'about', 'contact']
+      .indexOf(this.props.route) > -1;
 
     if (!this.props.route || special) {
       return (
@@ -200,10 +207,17 @@ var App = React.createClass({displayName: "App",
         )
       );
     }
-    else {
+    else if (['users', 'login', 'logout', 'register'].indexOf(this.props.route) > -1) {
       return (
         React.createElement("div", null, 
           React.createElement(Child, null)
+        )
+      );
+    }
+    else {
+      return (
+        React.createElement("div", null, 
+          "Whoops!  This isn't a valid page at this domain..."
         )
       );
     }

@@ -485,33 +485,109 @@ module.exports = function (db) {
   // About & Contact Routes ====================================================
 
   getAbout = function (req, res, next) {
-    db.UsersProfiles().fetchAll()
+    new db.UsersProfiles().fetchAll()
       .then(function (profile) {
-        console.log(profile);
+        if (req.query.mime === 'json') {
+          return res.status(200).send(profile);
+        }
+        return next();
       })
       .catch(function (error) {
+        console.log(error);
         return res.status(404).send("Could not get about!");
       })
     ;
   }
 
   getContact = function (req, res, next) {
-    db.UsersProfiles().fetchAll()
-      .then(function (profile) {
-        console.log(profile);
+    new db.UsersProfiles().fetchAll()
+      .then(function (contact) {
+        if (req.query.mime === 'json') {
+          return res.status(200).send(contact);
+        }
+        return next();
       })
       .catch(function (error) {
+        console.log(error);
         return res.status(404).send("Could not get contact!");
       })
     ;
   }
 
   postAbout = function (req, res, next) {
+    var users_id = req.user.get('users_id');
+    new db.UsersProfiles({users_id: users_id}).fetch()
+      .then(function (exists) {
 
+        var aboutData = {
+          "users_id": users_id,
+          "about": req.body.about
+        };
+
+        if (exists) {
+          exists.save(aboutData, {method: 'update'})
+            .then(function (success) {
+              return res.redirect('/about/');
+            })
+            .catch(function (error) {
+              return res.status(404).send("Could not update POST data!");
+            })
+          ;
+        }
+        else {
+          new db.UsersProfiles(aboutData).save()
+            .then(function (success) {
+              return res.redirect('/about/');
+            })
+            .catch(function (error) {
+              return res.status(404).send("Could POST about data!");
+            })
+          ;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        return res.status(404).send("Could not get about!");
+      })
+    ;
   }
 
   postContact = function (req, res, next) {
+    var users_id = req.user.get('users_id');
+    new db.UsersProfiles({users_id: users_id}).fetch()
+      .then(function (exists) {
 
+        var contactData = {
+          "users_id": users_id,
+          "contact": req.body.contact
+        };
+
+        if (exists) {
+          exists.save(contactData, {method: 'update'})
+            .then(function (success) {
+              return res.redirect('/contact/');
+            })
+            .catch(function (error) {
+              return res.status(404).send("Could not update POST data!");
+            })
+          ;
+        }
+        else {
+          new db.UsersProfiles(contactData).save()
+            .then(function (success) {
+              return res.redirect('/contact/');
+            })
+            .catch(function (error) {
+              return res.status(404).send("Could POST contact data!");
+            })
+          ;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        return res.status(404).send("Could not get contact!");
+      })
+    ;
   }
 
   return {
@@ -529,5 +605,9 @@ module.exports = function (db) {
     updateGalleriesImage: updateGalleriesImage,
     deleteGalleriesImage: deleteGalleriesImage,
     HTMLFormPutDeleteGalleriesImage: HTMLFormPutDeleteGalleriesImage,
+    getAbout: getAbout,
+    getContact: getContact,
+    postAbout: postAbout,
+    postContact: postContact
   }
 }

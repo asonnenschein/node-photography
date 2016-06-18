@@ -6,9 +6,9 @@
     "client": "postgres",
     "connection": {
       "host": "127.0.0.1",
-      "user": "photojoe_user",
+      "user": "nodephotouser",
       "password": "password",
-      "database": "photojoe_db",
+      "database": "nodephotodb",
       "charset": "utf8"
     }
   }

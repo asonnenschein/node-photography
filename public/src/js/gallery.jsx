@@ -58,27 +58,6 @@ var Gallery = React.createClass({
         if (this.isMounted()) {
           this.setState({data: data});
         }
-        /*
-        var other = [];
-        var children = $(this.getDOMNode()).find('#slideshow .slide');
-        if (children.length > 1) {
-          for (var i = 0; i < children.length; i++) {
-            other.push(children[i]);
-          }
-          function recurse (x) {
-            SlideShowTimeout = setTimeout(function () {
-              child = x.shift();
-              $(child).removeClass('active');
-              $(child).addClass('hidden');
-              $(x[0]).addClass('active');
-              $(x[0]).removeClass('hidden');
-              x.push(child);
-              recurse(x);
-            }, 5000);
-          }
-          recurse(other);
-        }
-        */
       }.bind(this),
       error: function (xhr, status, error) {
         console.error(this.props.source, status, error.toString());

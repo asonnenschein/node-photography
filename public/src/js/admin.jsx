@@ -450,9 +450,7 @@ var EditAbout = React.createClass({
             <fieldset>
               <legend>Edit About Page</legend>
               <div className="pure-control-group">
-                <textarea name="description" type="text"
-                  placeholder={this.props.data.about}
-                  defaultValue={this.props.data.about}>
+                <textarea name="about" type="text">
                 </textarea>
               </div>
               <button type="submit"
@@ -477,9 +475,7 @@ var EditContact = React.createClass({
             <fieldset>
               <legend>Edit Contact Page</legend>
               <div className="pure-control-group">
-                <textarea name="description" type="text"
-                  placeholder={this.props.data.contact}
-                  defaultValue={this.props.data.contact}>
+                <textarea name="contact" type="text">
                 </textarea>
               </div>
               <button type="submit"
