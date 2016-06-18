@@ -35,6 +35,24 @@ function checkAuthorization (req, res, next) {
   else res.status(401).send("Unauthorized request!");
 }
 
+// Robots.txt ==================================================================
+var robots = "User-agent: *";
+robots += "\nDisallow: /user/";
+robots += "\nDisallow: /user/*";
+robots += "\nDisallow: /admin/login/";
+robots += "\nDisallow: /admin/logout/";
+robots += "\nDisallow: /admin/register/";
+robots += "\nDisallow: /login/";
+robots += "\nDisallow: /logout/";
+robots += "\nDisallow: /register/";
+
+server.get('/robots.txt',
+  function (req, res) {
+    res.type('text/plain');
+    res.send(robots);
+  })
+;
+
 // Register, Login & Logout Routes =============================================
 server.post('/admin/login/',
   passport.authenticate('login'),
